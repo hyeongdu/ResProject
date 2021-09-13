@@ -27,7 +27,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 	@Autowired
 	AReservationDao insertdao;
 	@Autowired
-	AMembershipDao member;
+	AMembershipDao member_dao;
 	
 	//인기맛집 리스트
 	public String getlikeList() {
@@ -331,13 +331,13 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 //	=======================================================호범
 	// 로그인 및 본인확인
 		public int getLoginResult(Map<String, String> map) {
-			int nResult = member.getLoginResult(map);
+			int nResult = member_dao.getLoginResult(map);
 			return nResult;
 		}
 
 		// 회원가입
 		public int getJoinResult(Map<String, String> map) {
-			int nResult = member.getJoinResult(map);
+			int nResult = member_dao.getJoinResult(map);
 			return nResult;
 		}
 
@@ -347,7 +347,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<AReservationDto> list = member.getCustomerResList(c_id);
+			ArrayList<AReservationDto> list = member_dao.getCustomerResList(c_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
@@ -377,12 +377,12 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 		// 회원 아이디를 통해 업주의 예약리스트 출력
 				public String getReservationList(String c_id) {
 					System.out.println("Service:getResercationList"); 
-					List<ACustomerListDto> list2 = member.searchR_name(c_id);
+					List<ACustomerListDto> list2 = member_dao.searchR_name(c_id);
 					String r_name = list2.get(0).getR_name();
 					System.out.println("r_name : " + r_name);
 					JSONObject fjb = new JSONObject();
 					int i = 0;
-					ArrayList<AReservationDto> list = member.getReservationList(r_name);
+					ArrayList<AReservationDto> list = member_dao.getReservationList(r_name);
 
 					JSONArray jsonArray1 = new JSONArray();
 					for (i = 0; i < list.size(); i++) {
@@ -415,7 +415,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<ACustomerListDto> list = member.getMyInfo(c_id);
+			ArrayList<ACustomerListDto> list = member_dao.getMyInfo(c_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
@@ -440,7 +440,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<ACustomerListDto> list = member.getMyProfile(c_id);
+			ArrayList<ACustomerListDto> list = member_dao.getMyProfile(c_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
@@ -461,7 +461,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<ACustomerListDto> list = member.getMyProfile(c_id);
+			ArrayList<ACustomerListDto> list = member_dao.getMyProfile(c_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
@@ -480,7 +480,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 		
 		// 내 정보 수정(Update)
 		public int setUpdateMyProfile(Map<String, String> map) {
-			int nResult = member.setUpdateMyProfile(map);
+			int nResult = member_dao.setUpdateMyProfile(map);
 			return nResult;
 		}
 		
@@ -490,7 +490,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 			
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<AReviewListDto> list = member.getMyReview(c_id);
+			ArrayList<AReviewListDto> list = member_dao.getMyReview(c_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
@@ -516,7 +516,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 			
 			JSONObject fjb = new JSONObject();
 			
-			ArrayList<ARestaurantListDto> infolist=member.getrestaurantInfoMg(m_id);
+			ArrayList<ARestaurantListDto> infolist=member_dao.getrestaurantInfoMg(m_id);
 			
 			JSONArray jsonArray1 = new JSONArray();
 
@@ -551,12 +551,12 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 		
 		// 가게 정보수정
 		public int setStoreUpdate(Map<String, String> map) {
-			int nResult = member.setStoreUpdate(map);
+			int nResult = member_dao.setStoreUpdate(map);
 			return nResult;
 		}
 
 		public int setUpdateNickname(String nickname, String c_id) {
-			int nResult = member.setUpdateNickname(nickname, c_id);
+			int nResult = member_dao.setUpdateNickname(nickname, c_id);
 			return nResult;
 		}
 		
@@ -565,7 +565,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 
 							JSONObject fjb = new JSONObject();
 							int i = 0;
-							ArrayList<ASirenDto> list = member.getCustomersirenList(c_id);
+							ArrayList<ASirenDto> list = member_dao.getCustomersirenList(c_id);
 
 							JSONArray jsonArray1 = new JSONArray();
 							for (i = 0; i < list.size(); i++) {
@@ -594,13 +594,13 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 						}
 
 		@Override
-		public int andCheckId(Map<String, String> map) {
-			int nResult = member.andCheckId(map);
+		public int androidCheckId(String member_id) {
+			int nResult = member_dao.androidCheckId(member_id);
 			return nResult;
 		}
 		@Override
-		public int andCheckNickName(Map<String, String> map) {
-			int nResult = member.andCheckNickName(map);
+		public int androidCheckNickName(String member_nickname) {
+			int nResult = member_dao.androidCheckNickName(member_nickname);
 			return nResult;
 		}
 

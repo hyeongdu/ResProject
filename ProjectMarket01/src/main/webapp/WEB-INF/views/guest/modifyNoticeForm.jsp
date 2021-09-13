@@ -48,17 +48,17 @@
 
 		var text = new CKEDITOR.dom.text( 'editor1' );
 
-		if ($('#title').val().length == 0) {
+		if ($('#noticeboard_title').val().length == 0) {
 			console.log("1th if");
 			alert("제목을 입력해주세요.");
-			$('#title').focus();
+			$('#noticeboard_title').focus();
 			return;
 		}
 
-		if ($('#bcontents').val().length == 0) {
+		if ($('#noticeboard_content').val().length == 0) {
 			console.log("2nd if");
 			alert("내용을 입력해주세요.");
-			$('#content_text').focus();
+			$('#noticeboard_content').focus();
 			return;
 		}
 
@@ -97,7 +97,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"  href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"  href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -116,25 +116,25 @@
 
 			<div class="container col-12">
 				<form action="/admin/modifyContent_view" method= "post" enctype= "multipart/form-data">
-				<c:forEach var="noticeList" items="${noticeList}">
+				<c:forEach var="noticeDto" items="${noticeDto}">
 					<div class="input-group mb-3">
 						<span class="input-group-text col-1" id="basic-addon1">작성자</span>
-						<input class="form-control" id="bname" name="bname"
-							readonly="readonly" value="${noticeList.bname}" aria-label="이름"
+						<input class="form-control" id="noticeboard_nickname" name=noticeboard_nickname
+							readonly="readonly" value="${noticeDto.noticeboard_nickname}" aria-label="이름"
 							aria-describedby="basic-addon1">
 					</div>
 					<div class="input-group mb-3">
 						<span class="input-group-text col-1" id="basic-addon1">제목</span> <input
-							type="text" class="form-control" id="btitle" name="btitle"
-							aria-label="제목" aria-describedby="basic-addon1" value="${noticeList.btitle}">
+							type="text" class="form-control" id="noticeboard_title" name="noticeboard_title"
+							aria-label="제목" aria-describedby="basic-addon1" value="${noticeDto.noticeboard_title}">
 					</div> 
 					<div class="input-group mb-3">
 						  <span class="input-group-text col-1" id="basic-addon1">첨부파일</span> 
-						  <input class="form-control" readonly="readonly" name="file" type="text" id="formFile" value="${noticeList.fileName}">
+						 <input class="form-control" name="noticeboard_filename" type="file" id="noticeboard_filename">
 					</div>
 				
 					<span class="input-group-text col-1" id="basic-addon1">내용</span>
-					<textarea class="form-control" name= "bcontent" id="editor1" rows="3">${noticeList.bcontent}</textarea>
+					<textarea class="form-control" name= "noticeboard_content" id="editor1" rows="3">${noticeDto.noticeboard_content}</textarea>
 					<script>
 			                        CKEDITOR.replace( 'editor1' );
 	                </script>
@@ -142,7 +142,7 @@
 					 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	    
 					<br>
-					 <input name="bId" type="hidden" id="bId" value="${noticeList.bid}">
+					 <input name="noticeboard_number" type="hidden" id="noticeboard_number" value="${noticeDto.noticeboard_number}">
 					<p>
 					<div class="d-flex justify-content-center">
 						<input type="button" class="btn btn-outline-warning d-flex p-2" value="취소"

@@ -87,7 +87,7 @@
   </head>
   <body class="body2">
     <nav class="navbar navbar-expand-lg">
- 		<a class="navbar-brand" href="list.do"></a>
+ 		<a class="navbar-brand" href="/"></a>
   		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
    		 <span class="navbar-toggler-icon"></span>
   	</button>
@@ -111,7 +111,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"   href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"   href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -119,7 +119,7 @@
 </nav>
 
 	<div class ="row"> 
-				<a href="/content_view?bId=13"><img class = "slide1" src="/img/main1.png"></a>
+				<a href="/admin/content_view?noticeboard_number=3"><img class = "slide1" src="/img/main1.png"></a>
 			<img class = "slide1" src="/img/main2.png" >
 
 		</div>
@@ -141,10 +141,10 @@
 		<div class="row">
 			<div class="container">
 				<div class="row">
-					<c:forEach items="${noticeTitle}" var="NoticeDto">
-						<div class="col-4  inform" onclick="javascript:window.location='/admin/content_view?bId=${NoticeDto.bid}'">
-						<div class="" style="font-size:30px; height:200px">${NoticeDto.btitle}</div>
-						<div class =" text-secondary"style="font-size:15px">${fn:split(NoticeDto.bdate,' ')[0]}</div>
+					<c:forEach items="${noticeListDto}" var="noticeListDto">
+						<div class="col-4  inform" onclick="javascript:window.location='/admin/content_view?noticeboard_number=${noticeListDto.noticeboard_number}'">
+						<div class="" style="font-size:30px; height:200px">${noticeListDto.noticeboard_title}</div>
+						<div class =" text-secondary"style="font-size:15px">${fn:split(noticeListDto.noticeboard_title,' ')[0]}</div>
 						</div>
 					</c:forEach>
 				</div>

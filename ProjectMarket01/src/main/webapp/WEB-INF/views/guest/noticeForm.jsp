@@ -97,7 +97,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"  href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"  href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -118,22 +118,22 @@
 				<form action="/admin/noticeWrite" method= "post" enctype= "multipart/form-data">
 					<div class="input-group mb-3">
 						<span class="input-group-text col-1" id="basic-addon1">작성자</span>
-						<input class="form-control" id="bname" name="bname"
-							readonly="true" value="${nickname}" aria-label="이름"
+						<input class="form-control" id="noticeboard_nickname" name="noticeboard_nickname"
+							readonly="readonly" value="${nickname}" aria-label="이름"
 							aria-describedby="basic-addon1">
 					</div>
 					<div class="input-group mb-3">
 						<span class="input-group-text col-1" id="basic-addon1">제목</span> <input
-							type="text" class="form-control" id="btitle" name="btitle"
+							type="text" class="form-control" id="noticeboard_title" name="noticeboard_title"
 							aria-label="제목" aria-describedby="basic-addon1">
 					</div>
 					<div class="input-group mb-3">
 						  <span class="input-group-text col-1" id="basic-addon1">첨부파일</span> 
-						  <input class="form-control" name="file" type="file" id="formFile">
+						  <input class="form-control" name="noticeboard_filename" type="file" id="formFile">
 					</div>
 				
 					<span class="input-group-text col-1" id="basic-addon1">내용</span>
-					<textarea class="form-control" name= "bcontent" id="editor1" rows="3"></textarea>
+					<textarea class="form-control" name= "noticeboard_content" id="editor1" rows="3"></textarea>
 					<script>
 			                        CKEDITOR.replace( 'editor1' );
 	                </script>

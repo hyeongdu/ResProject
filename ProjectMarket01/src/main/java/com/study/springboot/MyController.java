@@ -1,9 +1,7 @@
 package com.study.springboot;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +10,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,62 +43,53 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.study.springboot.dao.IGetUserInfoDao;
 import com.study.springboot.dao.ITestBoardDao;
-import com.study.springboot.dto.NoticeDto;
 import com.study.springboot.dto.NoticeListDto;
-import com.study.springboot.dto.ReplyDto;
 import com.study.springboot.dto.TestBoardDto;
 import com.study.springboot.dto.TokenDto;
 import com.study.springboot.dto.UserDto;
 import com.study.springboot.dto.UserInfoDto;
+import com.study.springboot.dto.UserUpdateDto;
 import com.study.springboot.service.IAndroidReservationService;
 import com.study.springboot.service.IAndroidRestaurantService;
-import com.study.springboot.service.ItAdminService;
-import com.study.springboot.service.ItProjectService;
+import com.study.springboot.service.IAdminService;
+import com.study.springboot.service.IProjectService;
 
 
 @Controller
 public class MyController {
 	
 	@Autowired
-	ItProjectService svc;
-	
+	IProjectService project_service;
 	@Autowired
-	IAndroidRestaurantService rservice;
+	IAndroidRestaurantService and_restaurant_service;
 	@Autowired
-	IAndroidReservationService iservice;
-	//형두가 사용
+	IAndroidReservationService and_reservation_service;
 	@Autowired
 	ITestBoardDao testdao;
 	@Autowired
 	IGetUserInfoDao userdao;
-	//지하 adimin
 	@Autowired
-	ItAdminService asvc;
+	IAdminService aProject_service;
 
 
 	@RequestMapping("/")
-	public String root(Model model) throws Exception {
-		
-		model.addAttribute("noticeTitle", asvc.noticeTitle());
-		int nTotalCount = svc.noticeTitleCount();
-		System.out.println("Count : " + nTotalCount);
+	public String root( Model model) throws Exception {
+		model.addAttribute("noticeListDto", aProject_service.noticeTitle());
 		return "guest/main1";
 	}
 	
 	@RequestMapping("/admin/content_view")
-	public String content_view(HttpServletRequest request, Model model) throws Exception {
-		String bId = request.getParameter("bId");
-		model.addAttribute("noticeList", asvc.content_view(bId));
+	public String content_view(@RequestParam("noticeboard_number")String noticeboard_number, Model model) throws Exception {
+		model.addAttribute("noticeList", aProject_service.content_view(noticeboard_number));
 		return "guest/content_view";
 	}
 
@@ -112,54 +100,94 @@ public class MyController {
 	}
 	
 	@RequestMapping("/security/join")
-	public @ResponseBody String join(HttpServletRequest request, Model model,
-			@ModelAttribute("dto") @Valid UserDto userDto, BindingResult result) {
-		String page = "joinForm";
-
-	
-		String c_phone = request.getParameter("c_phone1") + "-" +  request.getParameter("c_phone2") + "-" + request.getParameter("c_phone3");
-		userDto.setC_id(request.getParameter("c_id"));
-		userDto.setC_pw(request.getParameter("c_pw"));
-		userDto.setC_name(request.getParameter("c_name"));
-		userDto.setC_phone(c_phone);
-		userDto.setNickname(request.getParameter("nickname"));
-		userDto.setC_email_id(request.getParameter("c_email_id"));
-		userDto.setC_email_url(request.getParameter("c_email_url"));
-		userDto.setC_email(userDto.getC_email_id() + "@" + userDto.getC_email_url());
-
-		String password = userDto.getC_pw();
-
-		password = new StandardPasswordEncoder().encode(password);
-
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("item1", userDto.getC_name());
-		map.put("item2", userDto.getC_id());
-		map.put("item3", password);
-//		map.put("item3", userDto.getC_pw());
-		map.put("item4", userDto.getC_phone());
-		map.put("item5", userDto.getC_email());
-		map.put("item6", userDto.getNickname());
-
-		int nResult = svc.join(map);
-		System.out.println("join : " + nResult);
-
-		String json = "";
-		if (nResult == 1) {
-			json = "{\"code\":\"success\", \"desc\":\"회원가입을 완료하였습니다.\"}";
-		} else {
-			json = "{\"code\":\"fail\", \"desc\":\"에러가 발생하여 회원가입에 실패했습니다.\"}";
-		}
-
-		return json;
+	public @ResponseBody String join(@ModelAttribute("dto") @Valid UserDto userDto, BindingResult result) {
+			String json = "";
+			if(result.hasErrors()) {
+				if(result.getFieldError("member_name") != null) {	
+					String member_name_errer = result.getFieldError("member_name").getDefaultMessage();
+					System.out.println("member_name =" + member_name_errer );
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_name_errer + "\"}";
+				}
+				if(result.getFieldError("member_id") != null) {
+					String member_id_errer = result.getFieldError("member_id").getDefaultMessage();
+					System.out.println("member_id =" + result.getFieldError("member_id").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_id_errer + "\"}";
+				}
+				if(result.getFieldError("member_pw") != null) {
+					String member_pw_errer = result.getFieldError("member_pw").getDefaultMessage();
+					System.out.println("member_pw =" + result.getFieldError("member_pw").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_pw_errer + "\"}";
+				}
+				if(result.getFieldError("member_phone1") != null) {
+					String member_phone_errer = result.getFieldError("member_phone1").getDefaultMessage();
+					System.out.println("member_phone1 =" + result.getFieldError("member_phone1").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_phone_errer + "\"}";
+				}
+				if(result.getFieldError("member_phone2") != null) {
+					String member_phone_errer = result.getFieldError("member_phone2").getDefaultMessage();
+					System.out.println("member_phone2 =" + result.getFieldError("member_phone2").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_phone_errer + "\"}";
+				}
+				if(result.getFieldError("member_phone3") != null) {
+					String member_phone_errer = result.getFieldError("member_phone3").getDefaultMessage();
+					System.out.println("member_phone3 =" + result.getFieldError("member_phone3").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_phone_errer + "\"}";
+				}
+				if(result.getFieldError("member_email_id") != null) {
+					String member_email_id_errer = result.getFieldError("member_email_id").getDefaultMessage();
+					System.out.println("member_email_id =" + result.getFieldError("member_email_id").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_email_id_errer + "\"}";
+				}
+				if(result.getFieldError("member_email_url") != null) {
+					String member_email_url_errer = result.getFieldError("member_email_url").getDefaultMessage();
+					System.out.println("member_email_url =" + result.getFieldError("member_email_url").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_email_url_errer + "\"}";
+				}
+				if(result.getFieldError("member_nickname") != null) {
+					String member_nickname_errer = result.getFieldError("member_nickname").getDefaultMessage();
+					System.out.println("member_nickname =" + result.getFieldError("member_nickname").getDefaultMessage());
+					json = "{\"code\":\"fail\", \"desc\":\" " + member_nickname_errer + "\"}";
+				}
+				
+				return json;
+			} 
+				
+				System.out.println("userDto : " + userDto.getMember_id());
+				String cPhone = userDto.getMember_phone1()+ "-" +  userDto.getMember_phone2() + "-" + userDto.getMember_phone3();
+				userDto.setMember_phone(cPhone);
+				String cEmail = userDto.getMember_email_id()+ "@" + userDto.getMember_email_url();
+				userDto.setMember_email(cEmail);
+		
+				String password = userDto.getMember_pw();
+		
+				password = new StandardPasswordEncoder().encode(password);
+		
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("member_name", userDto.getMember_name());
+				map.put("member_id", userDto.getMember_id());
+				map.put("member_pw", password);
+				map.put("member_phone", userDto.getMember_phone());
+				map.put("member_email", userDto.getMember_email());
+				map.put("member_nickname", userDto.getMember_nickname());
+		
+				int nResult = project_service.join(map);
+				System.out.println("join : " + nResult);
+		
+				
+				if (nResult == 1) {
+					json = "{\"code\":\"success\", \"desc\":\"회원가입을 완료하였습니다.\"}";
+				} else {
+					json = "{\"code\":\"fail\", \"desc\":\"에러가 발생하여 회원가입에 실패했습니다.\"}";
+				}
+		
+				return json;
+			
 	}
 	
 	@RequestMapping("/admin/deleteNotice")
-	public @ResponseBody String deleteNotice(HttpServletRequest request) {
+	public @ResponseBody String deleteNotice(@RequestParam("noticeboard_number") String noticeboard_number) {
 
-	
-		String bId = request.getParameter("bId");
-
-		int nResult = svc.deleteNotice(bId);
+		int nResult = aProject_service.deleteNotice(noticeboard_number);
 		System.out.println("delete : " + nResult);
 
 		String json = "";
@@ -172,32 +200,57 @@ public class MyController {
 		return json;
 	}
 	@RequestMapping("/admin/modifyNoticeForm")
-	public String modifyNoticeForm(HttpServletRequest request, Model model) throws Exception {
-		String bId = request.getParameter("bId");
-		model.addAttribute("noticeList", asvc.content_view(bId));
+	public String modifyNoticeForm(@RequestParam("noticeboard_number")String noticeboard_number,Model model) throws Exception {
+		model.addAttribute("noticeDto",aProject_service.content_view(noticeboard_number));
 		return "guest/modifyNoticeForm";
 	}
 	
-	@RequestMapping("/security/modify")
-	public @ResponseBody String modifyInfo(HttpServletRequest request, Model model) {
+	@RequestMapping("/admin/modify")
+	public @ResponseBody String modifyInfo(@Valid UserUpdateDto userUpdateDto, BindingResult result) {
 		
+		String json = "";
+		if(result.hasErrors()) {
 
-		String c_id = request.getParameter("c_id");
-		String c_phone = request.getParameter("c_phone1") + "-" +  request.getParameter("c_phone2") + "-" + request.getParameter("c_phone3");
-		String c_eMail = request.getParameter("c_email");
-		String nickname = request.getParameter("nickname");
-		
+			if(result.getFieldError("member_phone1") != null) {
+				String member_phone_errer = result.getFieldError("member_phone1").getDefaultMessage();
+				System.out.println("member_phone1 =" + result.getFieldError("member_phone1").getDefaultMessage());
+				json = "{\"code\":\"fail\", \"desc\":\" " + member_phone_errer + "\"}";
+			}
+			if(result.getFieldError("member_phone2") != null) {
+				String member_phone_errer = result.getFieldError("member_phone2").getDefaultMessage();
+				System.out.println("member_phone2 =" + result.getFieldError("member_phone2").getDefaultMessage());
+				json = "{\"code\":\"fail\", \"desc\":\" " + member_phone_errer + "\"}";
+			}
+			if(result.getFieldError("member_phone3") != null) {
+				String member_phone_errer = result.getFieldError("member_phone3").getDefaultMessage();
+				System.out.println("member_phone3 =" + result.getFieldError("member_phone3").getDefaultMessage());
+				json = "{\"code\":\"fail\", \"desc\":\" " + member_phone_errer + "\"}";
+			}
+
+			if(result.getFieldError("member_email") != null) {
+				String member_email_errer = result.getFieldError("member_email").getDefaultMessage();
+				System.out.println("member_email =" + result.getFieldError("member_email").getDefaultMessage());
+				json = "{\"code\":\"fail\", \"desc\":\" " + member_email_errer + "\"}";
+			}
+			if(result.getFieldError("member_nickname") != null) {
+				String member_nickname_errer = result.getFieldError("member_nickname").getDefaultMessage();
+				System.out.println("member_nickname =" + result.getFieldError("member_nickname").getDefaultMessage());
+				json = "{\"code\":\"fail\", \"desc\":\" " + member_nickname_errer + "\"}";
+			}
+			
+			return json;
+		} 
 
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("item1", c_id);
-		map.put("item2", c_phone);
-		map.put("item3", c_eMail);
-		map.put("item4", nickname);
+		map.put("member_id", userUpdateDto.getMember_id());
+		map.put("member_phone", userUpdateDto.getMember_phone1() + "-" + userUpdateDto.getMember_phone2() + "-" + userUpdateDto.getMember_phone3());
+		map.put("member_email", userUpdateDto.getMember_email());
+		map.put("member_nickname", userUpdateDto.getMember_nickname());
 
-		int nResult = svc.updateInfo(map);
+		int nResult = project_service.updateInfo(map);
 		System.out.println("join : " + nResult);
 
-		String json = "";
+
 		if (nResult == 1) {
 			json = "{\"code\":\"success\", \"desc\":\"회원정보 수정을 완료하였습니다.\"}";
 		} else {
@@ -212,18 +265,14 @@ public class MyController {
 		
 			 System.out.println("modifyContent_view");
 				int size = 1024 * 1024 * 10;
-				String file = "";
-				String oriFile = "";
+				String noticeboard_filename = "";
+				String noticeboard_oriFilename = "";
 				
 				JSONObject obj = new JSONObject();
 				
 				try{
 					String path = ResourceUtils
 								.getFile("classpath:static/upload").toPath().toString();
-					
-					ClassPathResource classPathResource = new ClassPathResource("static/upload");
-
-					System.out.println("111111111111111111" + classPathResource.exists());
 					MultipartRequest multi = new MultipartRequest(request,path, size, "UTF-8", new DefaultFileRenamePolicy());
 					System.out.println(path);
 					Enumeration files = multi.getFileNames();
@@ -231,32 +280,26 @@ public class MyController {
 						if(files.hasMoreElements()) {
 							String str = (String)files.nextElement();
 							System.out.println(str.length());
-								file = multi.getFilesystemName(str);
-								oriFile = multi.getOriginalFileName(str);
+							noticeboard_filename = multi.getFilesystemName(str);
+							noticeboard_oriFilename = multi.getOriginalFileName(str);
 						}
-				
 					
-					System.out.println(file);
-					System.out.println(oriFile);
-					
-					String btitle = multi.getParameter("btitle");
-					System.out.println(btitle);
-					String bname = multi.getParameter("bname");
-					System.out.println(bname);
-					String bcontent = multi.getParameter("bcontent");
-					String bId = multi.getParameter("bId");
-					System.out.println(bcontent);
+					String noticeboard_title = multi.getParameter("noticeboard_title");
+					String noticeboard_nickname = multi.getParameter("noticeboard_nickname");
+					String noticeboard_content = multi.getParameter("noticeboard_content");
+					String noticeboard_number = multi.getParameter("noticeboard_number");
 					
 					Map<String, String> map = new HashMap<String, String>();
-					map.put("item1", btitle);
-					map.put("item2",bname);
-					map.put("item3", bcontent);
-					map.put("item4", file);
-					map.put("item5", bId);
+					map.put("noticeboard_title", noticeboard_title);
+					map.put("noticeboard_nickname",noticeboard_nickname);
+					map.put("noticeboard_content", noticeboard_content);
+					map.put("noticeboard_filename", noticeboard_filename);
+					map.put("noticeboard_oriFilename", noticeboard_oriFilename);
+					map.put("noticeboard_number", noticeboard_number);
 							
 					System.out.println(map.toString());
 					
-					int result = asvc.modifyContent_view(map);
+					int result = aProject_service.modifyContent_view(map);
 					System.out.println(result);
 			
 				}catch(Exception e) {
@@ -267,17 +310,11 @@ public class MyController {
 	}
 
 	@RequestMapping("/security/checkId")
-	public @ResponseBody String checkId(HttpServletRequest request) {
-		System.out.println("checkid");
-		String c_id = request.getParameter("c_id");
-		System.out.println("c_id=" + c_id);
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("item1", c_id);
-		System.out.println(map.toString());
-		int nResult = svc.checkid(map);
-
-		System.out.println("[" + nResult + "]");
-
+	public @ResponseBody String checkId(@RequestParam("member_id") String member_id) {
+		
+		System.out.println("member_id=" + member_id);
+		int nResult = project_service.checkId(member_id);
+		System.out.println("checkId_nResult : " + nResult);
 		String json = "";
 
 		if (nResult != 0) {// 결과 값이 있으면 아이디 존재
@@ -292,23 +329,20 @@ public class MyController {
 	@RequestMapping("/myPage/changePwd")
 	public @ResponseBody String changePwd(HttpServletRequest request) {
 		
-		String c_id = request.getParameter("c_id");
-		String password = request.getParameter("nC_pw");
-		String cPassword = request.getParameter("c_pw");
+		String member_id = request.getParameter("member_id");
+		String member_pw = request.getParameter("member_pw");
+		String new_member_pw = request.getParameter("new_member_pw");
 
 //		password = new StandardPasswordEncoder().encode(password);
-		cPassword = new StandardPasswordEncoder().encode(cPassword);
+		new_member_pw = new StandardPasswordEncoder().encode(new_member_pw);
 
-		String nResult = svc.checkPwd(c_id);
-		System.out.println("nResult=" + password);
-		System.out.println("nResult=" + nResult);
-		System.out.println(new StandardPasswordEncoder().matches(password, nResult));
+		String nResult = project_service.checkPwd(member_id);
 		String json = "";
-		if (!new StandardPasswordEncoder().matches(password, nResult)) {// 결과 값이 있으면 아이디 존재
+		if (!new StandardPasswordEncoder().matches(member_pw, nResult)) {// 결과 값이 있으면 아이디 존재
 			json = "{\"code\":\"fail\", \"desc\":\"현재 비밀번호 맞지않습니다.\"}";
 			
 		} else { // 없으면 아이디 존재 X
-			svc.insertPwd(cPassword, c_id);
+			project_service.updatePwd(new_member_pw, member_id);
 			json = "{\"code\":\"success\", \"desc\":\"비밀번호가 변경되었습니다.\"}";
 		}
 
@@ -319,17 +353,10 @@ public class MyController {
 
 
 	@RequestMapping("/security/checkNick")
-	public @ResponseBody String checkNick(HttpServletRequest request) {
-		String nickname = request.getParameter("nickname");
-		System.out.println("nickname=" + nickname);
-		Map<String, String> map = new HashMap<String, String>();
-		map.put("item6", nickname);
-
-		System.out.println(map);
-
-		int nResult = svc.checkNick(map);
-
-		System.out.println("[" + nResult + "]");
+	public @ResponseBody String checkNick(@RequestParam("member_nickname") String member_nickname) {
+		System.out.println("nickname=" + member_nickname);
+		int nResult = project_service.checkNick(member_nickname);
+		System.out.println("checkNick_nResult : " + nResult);
 
 		String json = "";
 
@@ -370,11 +397,11 @@ public class MyController {
 		}
 		System.out.println("nPage : " + nPage);
 		
-		model.addAttribute("page", svc.noticeCount(nPage));
+		model.addAttribute("page", project_service.noticeCount(nPage));
 	
-		nPage = svc.noticeCount(nPage).get(0).getCurPage();
+		nPage = project_service.noticeCount(nPage).get(0).getCurPage();
 		
-		model.addAttribute("noticeList", svc.noticeList(nPage));
+		model.addAttribute("noticeList", project_service.noticeList(nPage));
 	
 		return "guest/bookedlist";
 	}
@@ -401,11 +428,11 @@ public class MyController {
 		String content = request.getParameter("content");
 		System.out.println("search : " + category + content);
 	
-		model.addAttribute("page", svc.searchNoticeCount(nPage,category,content));
+		model.addAttribute("page", project_service.searchNoticeCount(nPage,category,content));
 	
-		nPage = svc.noticeCount(nPage).get(0).getCurPage();
+		nPage = project_service.noticeCount(nPage).get(0).getCurPage();
 		System.out.println("nPage : " + nPage);
-		model.addAttribute("noticeList", svc.searchNoticeList(nPage,category,content));
+		model.addAttribute("noticeList", project_service.searchNoticeList(nPage,category,content));
 	
 		return "guest/searchBookedlist";
 	}
@@ -416,10 +443,10 @@ public class MyController {
     	uId = userInfo(null);
 //    	System.out.println(uId.toString());
     	
-    	UserDto uDto = svc.userSelect(uId);
-    	System.out.println("nickname = " + uDto.getNickname().toString());
+    	UserDto uDto = project_service.userSelect(uId);
+    	System.out.println("nickname = " + uDto.getMember_nickname().toString());
     	
-    	model.addAttribute("nickname", uDto.getNickname());
+    	model.addAttribute("nickname", uDto.getMember_nickname());
     	
 		return "member/noticeForm";
 	}
@@ -506,27 +533,20 @@ public class MyController {
 		return "security/main2";
 	}
 	
-	@RequestMapping("/myPageMain")
-	public String myPageInfo(HttpServletRequest request,Model model) {
+	@RequestMapping("/mypage_main")
+	public String myPageInfo(@RequestParam("member_id")String member_id,Model model) {
 		System.out.println("CONTROLLER: myPageMain");
-		String c_id = request.getParameter("c_id");
-		System.out.println(c_id);
-		System.out.println("userName : "+asvc.myPageInfo("c_id"));
-		model.addAttribute("myPageInfo", asvc.myPageInfo(c_id));
+		model.addAttribute("myPageInfo", aProject_service.myPageInfo(member_id));
 		return "/guest/myPageMain";
 			
 	}
 	@RequestMapping("/changeMyInfo")
-	public String changeMyInfo(HttpServletRequest request,Model model) {
+	public String changeMyInfo(@RequestParam("member_id")String member_id,Model model) {
 		System.out.println("CONTROLLER: myPageMain");
-		String c_id = request.getParameter("c_id");
-		System.out.println(c_id);
-		System.out.println("userName : "+asvc.myPageInfo("c_id"));
-		List<UserInfoDto> info = asvc.myPageInfo(c_id);
-		String[] c_phone = info.get(0).getC_phone().split("-");
-		model.addAttribute("myPageInfo", asvc.myPageInfo(c_id));
+		List<UserUpdateDto> info = aProject_service.myPageInfo(member_id);
+		String[] c_phone = info.get(0).getMember_phone().split("-");
+		model.addAttribute("myPageInfo", info);
 		model.addAttribute("c_phone", c_phone);
-		String test = c_phone[0];
 	
 		return "/guest/changeMyInfo";
 			
@@ -537,51 +557,46 @@ public class MyController {
 		String sPlace = request.getParameter("searchplace");
 		String sp = "%" + sPlace + "%";
 		System.out.println(sp);
-		model.addAttribute("list", svc.searchReject(sp));
-		model.addAttribute("list2", svc.searchRequest(sp));
+		model.addAttribute("list", project_service.searchReject(sp));
+		model.addAttribute("list2", project_service.searchRequest(sp));
 		return "search";
 	}	
-	
-//	##=======================admin 지하========================================
 	
 	@RequestMapping("/noticelist")
 	public String getNoticeList(HttpServletRequest request, Model model){
 		System.out.println("Controller: getNoticeList method");
 
-		int nPage = 1;
+		int noticeboard_page = 1;
 		try
 		{
 			String sPage = request.getParameter("page");
 			 
 			System.out.println(sPage);
-			nPage = Integer.parseInt(sPage);
+			noticeboard_page = Integer.parseInt(sPage);
 			
 			
 		}catch(Exception e)
 		{
 	
 		}
-		System.out.println("nPage : " + nPage);
+		System.out.println("nPage : " + noticeboard_page);
 		
-		model.addAttribute("page", svc.noticeCount(nPage));
-		nPage = svc.noticeCount(nPage).get(0).getCurPage();
-		System.out.println("nPage : " + nPage);
-		model.addAttribute("noticeList", asvc.noticeList(nPage));
+		model.addAttribute("page", project_service.noticeCount(noticeboard_page));
+		noticeboard_page = project_service.noticeCount(noticeboard_page).get(0).getCurPage();
+		System.out.println("nPage : " + noticeboard_page);
+		model.addAttribute("noticeList", aProject_service.noticeList(noticeboard_page));
 		
 	
-		System.out.println("Count : " + svc.noticeCount(nPage));
+		System.out.println("Count : " + project_service.noticeCount(noticeboard_page));
 		
 		return "guest/snoticelist";
 	}
 	
 	    
-    @RequestMapping("/donoticewrite")
-	public String adminNoticeForm(HttpServletRequest request, Model model) {
+    @RequestMapping("/notice_write")
+	public String adminNoticeForm(@RequestParam("user")String member_id, Model model) {
     	
-    	String user=request.getParameter("user");
-    	System.out.println("request user: "+user);
-    	
-    	model.addAttribute("nickname", asvc.getUserNickname(user));
+    	model.addAttribute("nickname", aProject_service.getUserNickname(member_id));
     	
 		return "guest/noticeForm";
 	}
@@ -602,9 +617,6 @@ public class MyController {
 				String path = ResourceUtils
 							.getFile("classpath:static/upload").toPath().toString();
 				
-				ClassPathResource classPathResource = new ClassPathResource("static/upload");
-
-				System.out.println("111111111111111111" + classPathResource.exists());
 				MultipartRequest multi = new MultipartRequest(request,path, size, "UTF-8", new DefaultFileRenamePolicy());
 				System.out.println(path);
 				Enumeration files = multi.getFileNames();
@@ -620,22 +632,18 @@ public class MyController {
 				System.out.println(file);
 				System.out.println(oriFile);
 				
-				String btitle = multi.getParameter("btitle");
-				System.out.println(btitle);
-				String bname = multi.getParameter("bname");
-				System.out.println(bname);
-				String bcontent = multi.getParameter("bcontent");
-				System.out.println(bcontent);
-				
+				String noticeboard_title = multi.getParameter("noticeboard_title");
+				String noticeboard_nickname = multi.getParameter("noticeboard_nickname");
+				String noticeboard_content = multi.getParameter("noticeboard_content");
 				Map<String, String> map = new HashMap<String, String>();
-				map.put("item1", btitle);
-				map.put("item2",bname);
-				map.put("item3", bcontent);
-				map.put("item4", file);
-						
-				System.out.println(map.toString());
+				map.put("noticeboard_title", noticeboard_title);
+				map.put("noticeboard_nickname",noticeboard_nickname);
+				map.put("noticeboard_content", noticeboard_content);
+				map.put("noticeboard_filename", file);
+				map.put("noticeboard_oriFilename", oriFile);
 				
-				asvc.noticeWrite(map);
+				int nResult = aProject_service.noticeWrite(map);
+				System.out.println("nResult = "+ nResult);
 		
 			}catch(Exception e) {
 				e.printStackTrace();
@@ -649,21 +657,21 @@ public class MyController {
 	  @RequestMapping("/android/getreviewlist")
 	  public @ResponseBody String getReviewList(HttpServletRequest request) {
 		  System.out.println("Controller: getReviewList");
-		  return rservice.getReviewList(request.getParameter("m_number"), request.getParameter("r_name"));
+		  return and_restaurant_service.getReviewList(request.getParameter("m_number"), request.getParameter("r_name"));
 	  }
 	  
 	  //푸쉬알림
 		@RequestMapping("/SendMessage")
 		public String sendMessage() throws Exception {
 			System.out.println("sendMessage ");
-			return "admin/SendMessage";
+			return "admin/sendMessage";
 		}
 		//예약 체크
 		@RequestMapping("/android/checkReservation")
 		public @ResponseBody String checkReservation(HttpServletRequest request) throws Exception {
 			System.out.println("checkReservation ");
 			String r_rsvnumber = request.getParameter("r_rsvnumber");
-			String check=rservice.checkReservation(r_rsvnumber);
+			String check=and_restaurant_service.checkReservation(r_rsvnumber);
 			
 			System.out.println("controller checkReservation: "+check);
 			return check;
@@ -673,7 +681,7 @@ public class MyController {
 			public @ResponseBody String noCheckReservation(HttpServletRequest request) throws Exception {
 				System.out.println("noCheckReservation ");
 				String r_rsvnumber = request.getParameter("r_rsvnumber");
-				String check=rservice.noCheckReservation(r_rsvnumber);
+				String check=and_restaurant_service.noCheckReservation(r_rsvnumber);
 				
 				System.out.println("controller noCheckReservation: "+check);
 				return check;
@@ -693,7 +701,7 @@ public class MyController {
 			try{
 				//토큰 넣는곳
 				JSONArray deviceId = new JSONArray();
-				List<TokenDto> list = asvc.tokenList();
+				List<TokenDto> list = aProject_service.tokenList();
 				while(i < list.size()) {
 					deviceId.add(list.get(i).getToken());
 					System.out.println(list.get(i).getToken());
@@ -750,14 +758,14 @@ public class MyController {
 				e.printStackTrace()	;
 			}
 			
-			return "admin/SendMessageOk";
+			return "admin/sendMessageOk";
 		}
 	//사이렌 예약리스트 가져오기
 	@RequestMapping("/sirenlist")
 	public String adminSirenList(Model model) {
-		model.addAttribute("sirenList", asvc.sirenList());
+		model.addAttribute("sirenList", aProject_service.sirenList());
 			
-//		int nTotalCount = svc.noticeCount();
+//		int nTotalCount = project_service.noticeCount();
 //		System.out.println("Count : " + nTotalCount);
 		return "admin/sirenlist";
 	}
@@ -798,14 +806,14 @@ public class MyController {
 		@RequestMapping("/android/likelist")
 		public @ResponseBody String likelistBoard(Model model) {
 			System.out.println("Controller:likelist data");
-			String likelist=rservice.getlikeList();
+			String likelist=and_restaurant_service.getlikeList();
 			return likelist;
 		}
 		//최근등록 맛집 리스트
 		@RequestMapping("/android/recentlist")
 		public @ResponseBody String RecentlistBoard(Model model) {
 			System.out.println("Controller:RecentListBoard");
-			String recentlist=rservice.getrecentList();
+			String recentlist=and_restaurant_service.getrecentList();
 			
 			System.out.println("controller recentlist: "+recentlist);
 			return recentlist;
@@ -820,7 +828,7 @@ public class MyController {
 			String searchword=request.getParameter("search");
 			System.out.println("검색어: "+searchword);
 			
-			String searchlist=rservice.getsearchList(searchword);
+			String searchlist=and_restaurant_service.getsearchList(searchword);
 			return searchlist;
 		}
 		
@@ -833,7 +841,7 @@ public class MyController {
 				String storename=request.getParameter("rname");
 				System.out.println(mnumber+":"+storename);
 				
-				String menulist=rservice.getMenuList(mnumber, storename);
+				String menulist=and_restaurant_service.getMenuList(mnumber, storename);
 				System.out.println("controller menulist:"+menulist);
 				return menulist;
 			}
@@ -847,7 +855,7 @@ public class MyController {
 				String storename=request.getParameter("rname");
 				System.out.println(mnumber+":"+storename);
 				
-				String infolist=rservice.getRestaurantInfo(mnumber, storename);
+				String infolist=and_restaurant_service.getRestaurantInfo(mnumber, storename);
 				System.out.println("controller infolist:"+infolist);
 				return infolist;
 			}
@@ -861,7 +869,7 @@ public class MyController {
 
 				System.out.println("c_id: "+c_id);
 				
-				String meminfo=iservice.getRsvMemInfo(c_id);
+				String meminfo=and_reservation_service.getRsvMemInfo(c_id);
 				return meminfo;
 			}
 			//예약정보 저장
@@ -887,7 +895,7 @@ public class MyController {
 				}
 				System.out.println("controller put map : "+rsv);
 				
-				int result=iservice.insertReservationInfo(rsv);
+				int result=and_reservation_service.insertReservationInfo(rsv);
 				return result;
 			}
 			//예약완료시 예약고유번호로 예약정보 가져오기
@@ -898,7 +906,7 @@ public class MyController {
 				String r_rsvnumber=request.getParameter("r_rsvnum");
 				System.out.println("r_rsvnumber: "+r_rsvnumber);
 						
-				String rsvinfo=iservice.getRsvInfo(r_rsvnumber);
+				String rsvinfo=and_reservation_service.getRsvInfo(r_rsvnumber);
 				return rsvinfo;
 			}
 			//좋아요 확인		
@@ -909,7 +917,7 @@ public class MyController {
 				String r_name=request.getParameter("r_name");
 				String m_number=request.getParameter("m_number");
 				
-				int nResult=rservice.checkLike(m_number, r_name, c_id);
+				int nResult=and_restaurant_service.checkLike(m_number, r_name, c_id);
 				System.out.println("controller checklike result: "+nResult);
 				return nResult;
 			}
@@ -921,7 +929,7 @@ public class MyController {
 				String r_name=request.getParameter("r_name");
 				String m_number=request.getParameter("m_number");
 				
-				int nResult=rservice.doLike(m_number, r_name, c_id);
+				int nResult=and_restaurant_service.doLike(m_number, r_name, c_id);
 				return nResult;
 			}
 			//좋아요 취소
@@ -932,7 +940,7 @@ public class MyController {
 				String r_name=request.getParameter("r_name");
 				String m_number=request.getParameter("m_number");
 				
-				int nResult=rservice.undoLike(m_number, r_name, c_id);
+				int nResult=and_restaurant_service.undoLike(m_number, r_name, c_id);
 				return nResult;
 			}
 			//좋아요 리스트 
@@ -941,7 +949,7 @@ public class MyController {
 				System.out.println("COntroller : getlike list");
 				String c_id=request.getParameter("id");
 				
-				String result=rservice.getLikeList(c_id);
+				String result=and_restaurant_service.getLikeList(c_id);
 				return result;
 			}
 //			============================호범
@@ -957,22 +965,14 @@ public class MyController {
 				map.put("item2", c_pw);
 				System.out.println(map.toString());
 
-				int nResult = rservice.getLoginResult(map);
+				int nResult = and_restaurant_service.getLoginResult(map);
 
 				return nResult;
 			}
 			@RequestMapping("/android/checkId")
-			public @ResponseBody String andcheckId(HttpServletRequest request) {
-				System.out.println("아이디 중복 확인");
-				String c_id = request.getParameter("c_id");
-			
-
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("c_id", c_id);
-			
-				System.out.println(map.toString());
-
-				int nResult = rservice.andCheckId(map);
+			public @ResponseBody String andcheckId(@RequestParam("member_id")String member_id) {
+				System.out.println("/android/checkId");
+				int nResult = and_restaurant_service.androidCheckId(member_id);
 				
 				System.out.println(nResult);
 				
@@ -991,17 +991,9 @@ public class MyController {
 			}
 			
 			@RequestMapping("/android/checkNickName")
-			public @ResponseBody String checkNickName(HttpServletRequest request) {
+			public @ResponseBody String checkNickName(@RequestParam("member_nickname")String member_nickname) {
 				System.out.println("아이디 중복 확인");
-				String nickName = request.getParameter("nickName");
-			
-
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("nickName", nickName);
-			
-				System.out.println(map.toString());
-
-				int nResult = rservice.andCheckNickName(map);
+				int nResult = and_restaurant_service.androidCheckNickName(member_nickname);
 				
 				System.out.println(nResult);
 				
@@ -1022,36 +1014,36 @@ public class MyController {
 
 				System.out.println(request.getParameter("userid"));
 
-				String c_name = request.getParameter("c_name");
-				String c_id = request.getParameter("c_id");
-				String c_pw = request.getParameter("c_pw");
-				String c_phone = request.getParameter("c_phone");
-				String c_eMail = request.getParameter("c_email");
-				String nickname = request.getParameter("nickname");
+				String c_name = request.getParameter("member_name");
+				String c_id = request.getParameter("member_id");
+				String c_pw = request.getParameter("member_pw");
+				String c_phone = request.getParameter("member_phone");
+				String c_eMail = request.getParameter("member_email");
+				String nickname = request.getParameter("member_nickname");
 				String token = request.getParameter("token");
 
 				Map<String, String> map = new HashMap<String, String>();
-				map.put("item1", c_name);
-				map.put("item2", c_id);
-				map.put("item3", c_pw);
-				map.put("item4", c_phone);
-				map.put("item5", c_eMail);
-				map.put("item6", nickname);
-				map.put("item7", token);
+				map.put("member_name", c_name);
+				map.put("member_id", c_id);
+				map.put("member_pw", c_pw);
+				map.put("member_phone", c_phone);
+				map.put("member_email", c_eMail);
+				map.put("member_nickname", nickname);
+				map.put("token", token);
 				System.out.println(map);
 
-				int nResult = rservice.getJoinResult(map);
+				int nResult = and_restaurant_service.getJoinResult(map);
 
 				System.out.println("join=" + nResult);
 				return nResult;
 			}
 
 			// 회원의 예약 내역
-			@RequestMapping("/android/c_res_list")
+			@RequestMapping("/android/member_res_list")
 			public @ResponseBody String customerResList(HttpServletRequest request, Model model) {
 				System.out.println("Controller:CustomerResList");
 				String c_id = request.getParameter("c_id");
-				String customerResList = rservice.getCustomerResList(c_id);
+				String customerResList = and_restaurant_service.getCustomerResList(c_id);
 				return customerResList;
 			}
 			//업주 가게 예약 리스
@@ -1059,7 +1051,7 @@ public class MyController {
 			public @ResponseBody String reservationList(HttpServletRequest request, Model model) {
 				System.out.println("Controller:reservationList111111111111");
 				String c_id = request.getParameter("c_id");
-				String customerResList = rservice.getReservationList(c_id);
+				String customerResList = and_restaurant_service.getReservationList(c_id);
 				return customerResList;
 			}
 
@@ -1068,7 +1060,7 @@ public class MyController {
 			public @ResponseBody String myPage(HttpServletRequest request) {
 				System.out.println("Controller:MyPage");
 				String c_id = request.getParameter("c_id");
-				String myProfile = rservice.getMyProfile(c_id);
+				String myProfile = and_restaurant_service.getMyProfile(c_id);
 				return myProfile;
 			}
 
@@ -1077,7 +1069,7 @@ public class MyController {
 			public @ResponseBody String myProfileMod(HttpServletRequest request) {
 				System.out.println("Controller:MyPage");
 				String c_id = request.getParameter("c_id");
-				String modifyBaseData = rservice.getModifyData(c_id);
+				String modifyBaseData = and_restaurant_service.getModifyData(c_id);
 				return modifyBaseData;
 			}
 
@@ -1093,7 +1085,7 @@ public class MyController {
 				map.put("item2", c_pw);
 				System.out.println(map.toString());
 
-				int nResult = rservice.getLoginResult(map);
+				int nResult = and_restaurant_service.getLoginResult(map);
 
 				return nResult;
 			}
@@ -1118,7 +1110,7 @@ public class MyController {
 				map.put("item4", c_id);
 				System.out.println(map);
 
-				int nResult = rservice.setUpdateMyProfile(map);
+				int nResult = and_restaurant_service.setUpdateMyProfile(map);
 
 				System.out.println("modify result=" + nResult);
 				return nResult;
@@ -1132,7 +1124,7 @@ public class MyController {
 				String c_id = request.getParameter("c_id");
 				System.out.println("getParameter(c_id) = " + c_id);
 
-				String myReviewList = rservice.getMyReview(c_id);
+				String myReviewList = and_restaurant_service.getMyReview(c_id);
 
 				return myReviewList;
 			}
@@ -1145,7 +1137,7 @@ public class MyController {
 				String m_id = request.getParameter("m_id");
 				System.out.println(m_id);
 
-				String infolist = rservice.getRestaurantInfoMg(m_id);
+				String infolist = and_restaurant_service.getRestaurantInfoMg(m_id);
 				System.out.println("controller infolist:" + infolist);
 				return infolist;
 			}
@@ -1165,7 +1157,7 @@ public class MyController {
 				map.put("item3", m_id);
 				System.out.println(map.toString());
 				
-				int nResult = rservice.setStoreUpdate(map);
+				int nResult = and_restaurant_service.setStoreUpdate(map);
 				
 				return nResult;
 			}
@@ -1178,7 +1170,7 @@ public class MyController {
 				String nickname = request.getParameter("nickname");
 				String c_id = request.getParameter("c_id");
 				
-				int nResult = rservice.setUpdateNickname(nickname, c_id);
+				int nResult = and_restaurant_service.setUpdateNickname(nickname, c_id);
 				
 				return nResult;
 			}
@@ -1263,24 +1255,18 @@ public class MyController {
 			@RequestMapping("/android/getUserInfo")
 			public @ResponseBody String getUserInfo(HttpServletRequest request,Model model) {
 				System.out.println("getUserInfo");
-				String c_id = request.getParameter("c_id");
-				System.out.println(c_id);
+				String member_id = request.getParameter("c_id");
 				JSONObject fjb = new JSONObject(); 
 				JSONArray jsonArray1 = new JSONArray();
 				JSONObject jb = new JSONObject();
 				try {
-					ArrayList<UserInfoDto> list = userdao.getUserinfo(c_id);
-						jb.put("c_id", list.get(0).getC_id());
-						jb.put("c_index", list.get(0).getC_index());
-						jb.put("c_email", list.get(0).getC_email());
-						jb.put("c_name", list.get(0).getC_name());
-						String phoneSub = list.get(0).getC_phone();
-						System.out.println(phoneSub.substring(0,3));
-						System.out.println(phoneSub.substring(3,7));
-						System.out.println(phoneSub.substring(7,11));
-						String phone = phoneSub.substring(0,3) + "-"+phoneSub.substring(3,7) + "-"+ phoneSub.substring(7,11);
-						jb.put("c_phone", phone);
-						jb.put("nickname", list.get(0).getNickname());						
+						List<UserUpdateDto> list = aProject_service.myPageInfo(member_id);
+						jb.put("c_id", list.get(0).getMember_id());
+						jb.put("c_index", list.get(0).getMember_number());
+						jb.put("c_email", list.get(0).getMember_email());
+						jb.put("c_name", list.get(0).getMember_name());
+						jb.put("c_phone", list.get(0).getMember_phone());
+						jb.put("nickname", list.get(0).getMember_nickname());						
 						fjb.put("userInfo",jb);
 						System.out.println(fjb.toString());
 								
@@ -1375,33 +1361,16 @@ public class MyController {
 				
 					String fName = request.getParameter("fName");
 					System.out.println("filename = " +   fName);
-//					
-				
-//					out = response.getOutputStream();
+
 					String downFile = path + "/" + fName;
 					Path f = Paths.get(downFile);
 					System.out.println("downFile = " +   downFile);
 					File file = new File(downFile);
 					HttpHeaders headers = new HttpHeaders();
 					headers.setContentDisposition(ContentDisposition.builder("attachment").filename(file.getName()).build());
-//					response.setHeader("Cache-Control", "no-cache");
-//					response.addHeader("Content-disposition","attachment; fileName=" + fName);
-//					in = new FileInputStream(f);
+
 					Resource resource = new InputStreamResource(Files.newInputStream(f));
-//					byte[] buffer = new byte[1024 * 8];
-//					while(true) {
-//						
-//						int count = in.read(buffer);
-//						
-//						if(count == -1)
-//						{
-//							break;
-//						}
-//						out.write(buffer,0,count);
-//						
-//					}
-//					in.close();
-//					out.close();
+
 					return new ResponseEntity<Object>(resource, headers, HttpStatus.OK);
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -1418,7 +1387,7 @@ public class MyController {
 			public @ResponseBody String mysiren(HttpServletRequest request, Model model) {
 				System.out.println("Controller:CustomerResList");
 				String c_id = request.getParameter("c_id");
-				String customerResList = rservice.getCustomerSiren(c_id);
+				String customerResList = and_restaurant_service.getCustomerSiren(c_id);
 				return customerResList;
 			}
 

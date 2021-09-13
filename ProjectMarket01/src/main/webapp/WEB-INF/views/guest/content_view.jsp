@@ -3,6 +3,7 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -50,7 +51,7 @@
 <script>
 function fun_delete(bId)
 {
-	var bId = "bId="+bId;
+	var bId = "noticeboard_number="+bId;
 	$.ajax({
 		url: '/admin/deleteNotice',
 		type: 'POST',
@@ -72,7 +73,7 @@ function fun_delete(bId)
  
 function fun_modify(bId)
 {
-		window.location.href='/admin/modifyNoticeForm?bId='+bId;
+		window.location.href='/admin/modifyNoticeForm?noticeboard_number='+bId;
 
  }
 
@@ -107,7 +108,7 @@ function fun_modify(bId)
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"  href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"  href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -122,42 +123,42 @@ function fun_modify(bId)
 </div>
 
 	<div class="container">
-		<c:forEach var="noticeList" items="${noticeList}">
+		<c:forEach var="noticeDto" items="${noticeList}">
 		<p class="hi Secondary">공지사항</p>
 			<table class="table table-bordered table-striped shadow">
 			
 	 			<tr>
 	 				<td width="100px">제목</td>
-	 				<td colspan="5" ><p>${noticeList.btitle}</p></td>
+	 				<td colspan="5" ><p>${noticeDto.noticeboard_title}</p></td>
 	 			</tr>
 	 			
 	 			<tr>
 	 				<td>등록일</td>
 	 				<td>
-	 					${noticeList.bdate}&nbsp;&nbsp;
+	 					${fn:split(noticeDto.noticeboard_date,' ')[0]}&nbsp;&nbsp;
 	 				</td>
 	 				<td>작성자</td>
-	 				<td>${noticeList.bname}</td>
+	 				<td>${noticeDto.noticeboard_nickname}</td>
 	 				<td width="100px">조회수</td>
-	 				<td>${noticeList.bhit}</td>
+	 				<td>${noticeDto.noticeboard_hit}</td>
 	 			</tr>
 	 			<tr>
 	 				<td>첨부파일</td>
-	 				<td><a href="/notice/download?fName=${noticeList.fileName}">${noticeList.fileName}</a></td>
+	 				<td><a href="/notice/download?fName=${noticeDto.noticeboard_oriFilename}">${noticeDto.noticeboard_oriFilename}</a></td>
 	 			</tr>
 	 			
 	 			<tr>
 	 				<td>내용</td>
-	 				<td colspan="5" style="height:300px" >${noticeList.bcontent}</td>
+	 				<td colspan="5" style="height:300px" >${noticeDto.noticeboard_content}</td>
 	 			</tr>
 	 		
 			</table>
 			<div class="row">
 				<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/noticelist'">목록보기</button>
-				<c:set var="name" value="${noticeList.bname}" />
+				<c:set var="name" value="${noticeDto.noticeboard_nickname}" />
 			    <c:if test="${name == '관리자'}">
-					<button class="btn btn-primary" type="button" onclick="fun_modify(${noticeList.bid});" style="margin-left:10px">수정</button>
-					<button class="btn btn-primary" type="button" onclick="fun_delete(${noticeList.bid});" style="margin-left:10px">삭제</button>
+					<button class="btn btn-outline-warning" type="button" onclick="fun_modify(${noticeDto.noticeboard_number});" style="margin-left:10px">수정</button>
+					<button class="btn btn-outline-warning" type="button" onclick="fun_delete(${noticeDto.noticeboard_number});" style="margin-left:10px">삭제</button>
 				</c:if>
 			</div>
 			</c:forEach>

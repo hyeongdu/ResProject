@@ -30,85 +30,75 @@
 
 	<script>
 	function form_check() {
-		if($('#c_id').val().length == 0) {
-			alert("아이디를 입력해주세요.");
-			$('#c_id').focus();
-			return;
-		}
 		
-		if($('#c_id').val().length < 6) {
-			alert("아이디는 6글자 이상이어야 합니다.");
-			$('#c_id').focus();
-			return;
-		}
 		
-		if($('#c_pw').val().length == 0) {
+		if($('#member_pw').val().length == 0) {
 			alert("비밀번호를 입력해주세요.");
-			$('#c_pw').focus();
+			$('#member_pw').focus();
 			return;
 		}
 		
-		if($('#c_pw').val().length < 8) {
+		if($('#member_pw').val().length < 8) {
 			alert("비밀번호는 8자리 이상이어야 합니다.");
-			$('#c_pw').focus();
+			$('#member_pw').focus();
 			return;
 		}
 		
-		if($('#c_pw').val() != $('#password_check').val()) {
+		if($('#member_pw').val() != $('#password_check').val()) {
 			alert("비밀번호가 일치하지 않습니다.");
-			$('#c_pw').focus();
+			$('#member_pw').focus();
 			return;
 		}
 		
-		if($('#c_name').val().length == 0) {
+		if($('#member_name').val().length == 0) {
 			alert("이름을 입력해주세요.");
-			$('#c_name').focus();
+			$('#member_name').focus();
 			return;
 		}
 		
-		if($('#nickname').val().length == 0) {
-			alert("닉네임(별명)을 입력해주세요.");
-			$('#nickname').focus();
-			return;
-		}
 		
-		if($('#nickname').val().length < 3) {
-			alert("닉네임(별명)은 3글자 이상이어야 합니다.");
-			$('#nickname').focus();
-			return;
-		}
 		
-		if($('#c_email_id').val().length == 0) {
+		if($('#member_email_id').val().length == 0) {
 			alert("이메일 아이디를 입력해주세요.");
-			$('#c_email_id').focus();
+			$('#member_email_id').focus();
 			return;
 		}
 		
-		if($('#c_email_url').val().length == 0) {
+		if($('#member_email_url').val().length == 0) {
 			alert("이메일 주소를 입력해주세요.");
-			$('#c_email_url').focus();
+			$('#member_email_url').focus();
 			return;
 		}
 		
-		if($('#c_phone1').val().length == 0) {
+		if($('#member_phone1').val().length == 0) {
 			alert("전화번호를 입력해주세요.");
-			$('#c_phone').focus();
+			$('#member_phone').focus();
 			return;
 		}
-		if($('#c_phone2').val().length == 0) {
+		if($('#member_phone2').val().length == 0) {
 			alert("전화번호를 입력해주세요.");
-			$('#c_phone').focus();
+			$('#member_phone').focus();
 			return;
-		}if($('#c_phone3').val().length == 0) {
+		}if($('#member_phone3').val().length == 0) {
 			alert("전화번호를 입력해주세요.");
-			$('#c_phone').focus();
+			$('#member_phone').focus();
 			return;
 		}
 		submit_ajax();
 	}
 	
 	function check_id() {
-		var id = "c_id="+$('#c_id').val();
+		if($('#member_id').val().length == 0) {
+			alert("아이디를 입력해주세요.");
+			$('#member_id').focus();
+			return;
+		}
+		if($('#member_id').val().length < 6) {
+			alert("아이디는 6글자 이상이어야 합니다.");
+			$('#member_id').focus();
+			return;
+		}
+		var id = "member_id="+$('#member_id').val();
 		$.ajax({
 			url: '/security/checkId',
 			type: 'POST',
@@ -126,11 +116,21 @@
 	}
 	
 	function check_nick() {
-		var nickname = "nickname="+$('#nickname').val();
+		if($('#member_nickname').val().length == 0) {
+			alert("닉네임(별명)을 입력해주세요.");
+			$('#member_nickname').focus();
+			return;
+		}
+		if($('#member_nickname').val().length < 3) {
+			alert("닉네임(별명)은 3글자 이상이어야 합니다.");
+			$('#member_nickname').focus();
+			return;
+		}
+		var member_nickname = "member_nickname="+$('#member_nickname').val();
 		$.ajax({
 			url: '/security/checkNick',
 			type: 'POST',
-			data: nickname,
+			data: member_nickname,
 			dataType: 'text',
 			success: function(json) {
 				var result = JSON.parse(json);
@@ -147,7 +147,7 @@
 		<%
 			String conPath = request.getContextPath();
 		%>
-		var queryString = $("#reg_frm").serialize();
+		var queryString = $("#join_form").serialize();
 		$.ajax({
 			url: '<%=conPath%>/security/join',
 			type: 'POST',
@@ -166,18 +166,18 @@
 	}
 	
 	function moveCursor(){
-		if($('#c_phone1').val().length ==  3) {
-			$('#c_phone2').focus();
+		if($('#member_phone1').val().length ==  3) {
+			$('#member_phone2').focus();
 		}
 	}
 	function moveCursor2(){
-		if($('#c_phone2').val().length ==  4) {
-			$('#c_phone3').focus();
+		if($('#member_phone2').val().length ==  4) {
+			$('#member_phone3').focus();
 		}
 	}
 	function moveCursor3(){
-		if($('#c_phone3').val().length ==  4) {
-			$('#nickname').focus();
+		if($('#member_phone3').val().length ==  4) {
+			$('#member_nickname').focus();
 		}
 	}
 	</script>
@@ -205,7 +205,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"   href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"   href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -223,16 +223,16 @@
 		<hr>
 	
 		<div class="container col-8">
-			<form id="reg_frm" name="reg_frm" >
+			<form id="join_form" name="join_form" >
 				
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">아이디</span>
-					<input type="text" class="form-control" id="c_id" name="c_id" placeholder="* 6자리 이상" aria-label="아이디" aria-describedby="basic-addon1">&nbsp;
+					<input type="text" class="form-control" id="member_id" name="member_id" placeholder="* 6자리 이상" aria-label="아이디" aria-describedby="basic-addon1">&nbsp;
 					<button type="button" id="btn_checkid" class="btn btn-outline-warning" onclick="check_id()">아이디 중복확인</button>
 				</div>
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">비밀번호</span>
-  					<input type="password" class="form-control" id="c_pw" name="c_pw" placeholder="* 8자리 이상" aria-label="비밀번호" aria-describedby="basic-addon1">
+  					<input type="password" class="form-control" id="member_pw" name="member_pw" placeholder="* 8자리 이상" aria-label="비밀번호" aria-describedby="basic-addon1">
 				</div>
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">비밀번호 확인</span>
@@ -240,24 +240,25 @@
 				</div>
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">이름</span>
-  					<input type="text" class="form-control" id="c_name" name="c_name"  aria-label="이름" aria-describedby="basic-addon1">
+  					<input type="text" class="form-control" id="member_name" name="member_name"  aria-label="이름" aria-describedby="basic-addon1">
 				</div>
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">휴대폰</span>
-  					<input type="text" class="form-control" id="c_phone1" name="c_phone1" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor()">&nbsp;-&nbsp;
-  					<input type="text" class="form-control" id="c_phone2" name="c_phone2" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor2()">&nbsp;-&nbsp;
-  					<input type="text" class="form-control" id="c_phone3" name="c_phone3" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor3()">
+  					<input type="text" class="form-control" id="member_phone1" name="member_phone1" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor()">&nbsp;-&nbsp;
+  					<input type="text" class="form-control" id="member_phone2" name="member_phone2" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor2()">&nbsp;-&nbsp;
+  					<input type="text" class="form-control" id="member_phone3" name="member_phone3" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor3()">
+  					
 				</div>
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">닉네임</span>
-  					<input type="text" class="form-control" id="nickname" name="nickname" placeholder="* 3자리 이상" aria-label="닉네임" aria-describedby="basic-addon1">&nbsp;
+  					<input type="text" class="form-control" id="member_nickname" name="member_nickname" placeholder="* 3자리 이상" aria-label="닉네임" aria-describedby="basic-addon1">&nbsp;
   					<button type="button" class="btn btn-outline-warning" onclick="check_nick()">닉네임 중복확인</button>
 				</div>
 				<div class="input-group mb-3">
 					<span class="input-group-text col-3.5" id="basic-addon1">이메일</span>
-  					<input type="text" class="form-control" id="c_email_id" name="c_email_id" aria-label="c_email_id">
+  					<input type="text" class="form-control" id="member_email_id" name="member_email_id" aria-label="member_email_id">
   					<span class="input-group-text">@</span>
-  					<input type="text" class="form-control" id="c_email_url" name="c_email_url" aria-label="c_email_url">
+  					<input type="text" class="form-control" id="member_email_url" name="member_email_url" aria-label="member_email_url">
 				</div>
 				
 				<br><p>

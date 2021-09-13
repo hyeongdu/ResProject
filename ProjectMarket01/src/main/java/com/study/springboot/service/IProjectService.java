@@ -10,16 +10,15 @@ import com.study.springboot.dto.PageInfoDto;
 import com.study.springboot.dto.ReplyDto;
 import com.study.springboot.dto.UserDto;
 
-public interface ItProjectService {
+public interface IProjectService {
 
 //	public List<UserDto> list();
 	public int join(Map<String, String> map);
-	public int deleteNotice(String bId);
 	public int updateInfo(Map<String, String> map);
-	public int checkid(Map<String, String> map);
-	public int checkNick(Map<String, String> map);
-	public String checkPwd(String c_id);
-	public int insertPwd(String password, String c_id);
+	public int checkId(String member_id);
+	public int checkNick(String member_nickname);
+	public String checkPwd(String member_id);
+	public int updatePwd(String new_member_pw, String member_id);
 	public UserDto userSelect(String c_id);
 	public List<NoticeDto> noticeList(int curPage);
 	public List<NoticeDto> searchNoticeList(int curPage, String category, String content);

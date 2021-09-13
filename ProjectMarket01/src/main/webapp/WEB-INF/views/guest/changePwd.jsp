@@ -43,20 +43,20 @@
 	
 	function form_check() {
 		
-		if($('#nC_pw').val().length == 0) {
+		if($('#member_pw').val().length == 0) {
 			alert("비밀번호를 입력해주세요.");
-			$('#c_pw').focus();
+			$('#member_pw').focus();
 			return;
 		}
 		
-		if($('#c_pw').val().length < 8) {
+		if($('#new_member_pw').val().length < 8) {
 			alert("비밀번호는 8자리 이상이어야 합니다.");
-			$('#c_pw').focus();
+			$('#new_member_pw').focus();
 			return;
 		}
-		if($('#c_pw').val() != $('#password_check').val()) {
+		if($('#new_member_pw').val() != $('#password_check').val()) {
 			alert("비밀번호가 일치하지 않습니다.");
-			$('#c_pw').focus();
+			$('#new_member_pw').focus();
 			return;
 		}
 		
@@ -119,7 +119,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"  href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"  href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -132,17 +132,17 @@
 					<p class="col-10 hi Secondary">마이페이지</p>
 		</div>
 			<form id="reg_frm" name="reg_frm" >
-			<input type="hidden" class="form-control" id="c_id" name="c_id" value=<sec:authentication property="principal.Username"/>>
+			<input type="hidden" class="form-control" id="member_id" name="member_id" value=<sec:authentication property="principal.Username"/>>
 			 <div class="row justify-content-center"style="margin-top:180px;">
 			 	 <div class="input-group col-8" >
 	  					<span class="input-group-text col-3.5" id="basic-addon1">현재 비밀번호</span>
-	  					<input type="password" class="form-control" id="nC_pw" name="nC_pw" placeholder="현재 비밀번호" aria-label="비밀번호" aria-describedby="basic-addon1">
+	  					<input type="password" class="form-control" id="member_pw" name="member_pw" placeholder="현재 비밀번호" aria-label="비밀번호" aria-describedby="basic-addon1">
 				</div>
 			</div>
 			 <div class="row justify-content-center" style="margin-top:10px;">
 				 <div class="input-group col-8">
 	  					<span class="input-group-text col-3.5" id="basic-addon1">비밀번호</span>
-	  					<input type="password" class="form-control" id="c_pw" name="c_pw" placeholder="* 8자리 이상" aria-label="비밀번호" aria-describedby="basic-addon1">
+	  					<input type="password" class="form-control" id="new_member_pw" name="new_member_pw" placeholder="* 8자리 이상" aria-label="비밀번호" aria-describedby="basic-addon1">
 				</div>
 			</div>
 			 <div class="row justify-content-center"style="margin-top:10px;">
@@ -153,7 +153,7 @@
 			</div>
   			
   			<div class="d-flex justify-content-center"style="margin-top:10px;">
-					<input type="button" class="btn btn-outline-warning d-flex p-2" value="취소" onclick="javascript:window.location='/myPageMain?c_id=<sec:authentication property="principal.Username"/>'">&nbsp;&nbsp;&nbsp;
+					<input type="button" class="btn btn-outline-warning d-flex p-2" value="취소" onclick="javascript:window.location='/mypage_main?member_id=<sec:authentication property="principal.Username"/>'">&nbsp;&nbsp;&nbsp;
 					<input type="button" class="btn btn-outline-warning d-flex p-2" value="변경하기" onclick="form_check()">
 			</div>
 			</form>

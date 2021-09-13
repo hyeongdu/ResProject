@@ -8,12 +8,12 @@
 	<![CDATA[select count(*) from customer_list where c_id = #{item1} and c_pw = #{item2}]]>
 </select>
 
-<select resultType="_int" parameterType="java.util.HashMap" id="andCheckId">
-	<![CDATA[select count(*) from customer_list where c_id = #{c_id}]]>
+<select resultType="_int"  id="androidCheckId">
+	select count(*) from member_list where member_id = #{member_id}
 </select>
 
-<select resultType="_int" parameterType="java.util.HashMap" id="andCheckNickName">
-	<![CDATA[select count(*) from customer_list where nickname = #{nickName}]]>
+<select resultType="_int" id="androidCheckNickName">
+	select count(*) from member_list where member_nickname = #{member_nickname}
 </select>
 
 
@@ -48,8 +48,10 @@
 
 
 <insert parameterType="java.util.HashMap" id="getJoinResult">
-	<![CDATA[insert into customer_list(c_index, c_name, c_id, c_pw, c_phone, c_eMail, nickname, token)
-    		values(customer_list_seq.nextval, #{item1}, #{item2}, #{item3}, #{item4}, #{item5}, #{item6}, #{item7})]]>
+	insert into member_list (member_number, member_name, member_id, member_pw, member_phone,
+                     		 member_email, member_nickname, token, member_date, enabled)
+			values (customer_list_seq.nextval, #{member_name}, #{member_id}, #{member_pw},
+					#{member_phone}, #{member_email}, #{member_nickname},#{member_token}, sysdate, 1)
 </insert>
 
 <update parameterType="java.util.HashMap" id="setUpdateMyProfile">

@@ -167,16 +167,15 @@ public class JoinActivity extends AppCompatActivity {
             String password = String.format("%64x", new BigInteger(1, bytes));
 
 
-            map.put("c_name", c_name.getText().toString());
-            map.put("c_id", c_id.getText().toString());
-            map.put("c_pw", password);
-            map.put("c_phone", c_phone.getText().toString());
-            map.put("c_email", c_eMaill.getText().toString());
-            map.put("nickname", nickname.getText().toString());
+            map.put("member_name", c_name.getText().toString());
+            map.put("member_id", c_id.getText().toString());
+            map.put("member_pw", password);
+            map.put("member_phone", c_phone.getText().toString());
+            map.put("member_email", c_eMaill.getText().toString());
+            map.put("member_nickname", nickname.getText().toString());
             SharedPreferences pref = getSharedPreferences("token", Activity.MODE_PRIVATE);
             Log.d(TAG, "token : " + pref.getString("token",""));
             map.put("token",pref.getString("token",""));
-
 
             Log.d(TAG, map.toString());
 
@@ -229,7 +228,7 @@ public class JoinActivity extends AppCompatActivity {
         protected String doInBackground(Void ...voids) {
             OkHttpClient client = new OkHttpClient();
             Log.d(TAG2,c_id.getText().toString());
-            RequestBody body = new FormBody.Builder().add("c_id",c_id.getText().toString()).build();
+            RequestBody body = new FormBody.Builder().add("member_id",c_id.getText().toString()).build();
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)
@@ -286,7 +285,7 @@ public class JoinActivity extends AppCompatActivity {
         protected String doInBackground(Void ...voids) {
             OkHttpClient client = new OkHttpClient();
             Log.d(TAG2,c_id.getText().toString());
-            RequestBody body = new FormBody.Builder().add("nickName",nickname.getText().toString()).build();
+            RequestBody body = new FormBody.Builder().add("member_nickname",nickname.getText().toString()).build();
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)

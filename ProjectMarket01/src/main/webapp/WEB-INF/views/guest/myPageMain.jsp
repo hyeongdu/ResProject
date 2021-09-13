@@ -67,7 +67,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"  href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"  href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -85,10 +85,10 @@
 			    <div class="col-4 mypage border">
 			    	<p class="hi" style="font-size:15px; margin-top:10px">내정보</p>
 			    	
-			    	<span style="font-size:15px;"> 닉네임&nbsp;&nbsp;${myPageInfo.nickname} </span><br/>
-			    	<span style="font-size:15px;"> 연락처&nbsp;&nbsp;${myPageInfo.c_phone} </span><br/>
-			    	<span style="font-size:15px;">메일&nbsp;&nbsp;${myPageInfo.c_email} </span><br/>
-			    	<a class="text-warning btn btn-outline-warning"  href="/changeMyInfo?c_id=<sec:authentication property="principal.Username"/>" style="margin-top:120px">수정하기</a>&nbsp;&nbsp;   
+			    	<span style="font-size:15px;"> 닉네임&nbsp;&nbsp;${myPageInfo.member_nickname} </span><br/>
+			    	<span style="font-size:15px;"> 연락처&nbsp;&nbsp;${myPageInfo.member_phone} </span><br/>
+			    	<span style="font-size:15px;">메일&nbsp;&nbsp;${myPageInfo.member_email} </span><br/>
+			    	<a class="text-warning btn btn-outline-warning"  href="/changeMyInfo?member_id=<sec:authentication property="principal.Username"/>" style="margin-top:120px">수정하기</a>&nbsp;&nbsp;   
 			    	
 			    </div>
 			    <div class="col-4 mypage border" >

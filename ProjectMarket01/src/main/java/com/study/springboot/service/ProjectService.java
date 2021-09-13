@@ -19,81 +19,70 @@ import com.study.springboot.dto.ReplyDto;
 import com.study.springboot.dto.UserDto;
 
 @Service
-public class ProjectService implements ItProjectService {
+public class ProjectService implements IProjectService {
 	
 	@Autowired
-	ItUserDao dao;
+	ItUserDao user_dao;
 	
 	@Autowired
-	ItNoticeDao notice;
+	ItNoticeDao notice_dao;
 	
 	@Autowired
-	ItGoodsDao goods;
+	ItGoodsDao good_dao;
 	
 	@Autowired
-	ItReplyDao reply;
+	ItReplyDao reply_dao;
 
-//	@Override
-//	public List<UserDto> list() {
-//		return dao.list();
-//	}
-//
 	@Override
 	public UserDto userSelect(String c_id) {
-		return dao.userSelect(c_id);
+		return user_dao.userSelect(c_id);
 	}
 	
 	@Override
-	public int join(Map<String, String> map) {
+	public int join(Map<String, String> member_info) {
 		
-		int nResult = dao.join(map);
+		int nResult = user_dao.join(member_info);
 		return nResult;
 	}
 	
 	public List<NoticeListDto> modifyContent_view(String bId){
 		System.out.println("Service:  modifyContent_view");
-		List<NoticeListDto> list=dao.modifyContent_view(bId);
+		List<NoticeListDto> list=user_dao.modifyContent_view(bId);
 		System.out.println(list.toString());
 		return list;
 	}
 	
 	@Override
-	public int deleteNotice(String bId) {
-		
-		int nResult = dao.deleteNotice(bId);
-		return nResult;
-	}
-	@Override
 	public int updateInfo(Map<String, String> map) {
 		
-		int nResult = dao.updateInfo(map);
+		int nResult = user_dao.updateInfo(map);
 		return nResult;
 	}
 	
 	@Override
-	public int checkid(Map<String, String> map) {
+	public int checkId(String member_id) {
 		
-		int nResult = dao.checkid(map);
-		System.out.println(map);
+		int nResult = user_dao.checkId(member_id);
+		System.out.println(member_id);
 		return nResult;
 	}
 	
 	@Override
-	public int checkNick(Map<String, String> map) {
+	public int checkNick(String memeber_nickname) {
 		
-		int nResult = dao.checkNick(map);
+		int nResult = user_dao.checkNick(memeber_nickname);
 		return nResult;
 	}
 	@Override
-	public String checkPwd(String c_id) {
+	public String checkPwd(String member_id) {
 		
-		String nResult = dao.checkPwd(c_id);
+		String nResult = user_dao.checkPwd(member_id);
 		return nResult;
 	}
 	@Override
-	public int insertPwd(String password, String c_id) {
+	public int updatePwd(String new_member_pw, String member_id) {
 		
-		int nResult = dao.insertPwd(password, c_id);
+		int nResult = user_dao.updatePwd(new_member_pw, member_id);
 		return nResult;
 	}
 	
@@ -104,7 +93,7 @@ public class ProjectService implements ItProjectService {
 		int nStart = (curPage -1) * listCount + 1;
 		int nEnd = (curPage -1) * listCount + listCount;
 		System.out.println("Service:  noticelist");
-		List<NoticeDto> list=notice.noticeList(nStart, nEnd);
+		List<NoticeDto> list=notice_dao.noticeList(nStart, nEnd);
 		return list;
 	}
 	
@@ -114,27 +103,27 @@ public class ProjectService implements ItProjectService {
 		int nStart = (curPage -1) * listCount + 1;
 		int nEnd = (curPage -1) * listCount + listCount;
 		System.out.println("Service:  searchNoticeList");
-		List<NoticeDto> list=notice.searchNoticeList(nStart, nEnd, category, content);
+		List<NoticeDto> list=notice_dao.searchNoticeList(nStart, nEnd, category, content);
 		System.out.println(list);
 		return list;
 	}
 	
 	@Override
 	public List<NoticeDto> searchReject(String sPlace) {
-		return notice.searchReject(sPlace);
+		return notice_dao.searchReject(sPlace);
 	}
 	
 	@Override
 	public List<NoticeDto> searchRequest(String sPlace) {
-		return notice.searchRequest(sPlace);
+		return notice_dao.searchRequest(sPlace);
 	}
 	
 	@Override
 	public List<PageInfoDto> noticeCount(int curPage) {
-		int nTotalCount = notice.noticeCount();// 총 게시물 수 
+		int nTotalCount = notice_dao.noticeCount();// 총 게시물 수 
 		System.out.println("총 게시물 수  noticeCount : " + nTotalCount);
 		int listCount = 5;	// 한 페이지당 보여줄 게시물 수
-		int pageCount = 2; // 하다넹 보여줄 페이지 수
+		int pageCount = 3; // 하다넹 보여줄 페이지 수
 		
 		int totalPage = nTotalCount / listCount;
 		if(nTotalCount % listCount > 0)
@@ -168,7 +157,7 @@ public class ProjectService implements ItProjectService {
 	@Override
 	public List<PageInfoDto> searchNoticeCount(int curPage, String category, String content) {
 		
-		int nTotalCount = notice.searchNoticeCount(category, content);// 총 게시물 수 
+		int nTotalCount = notice_dao.searchNoticeCount(category, content);// 총 게시물 수 
 		System.out.println("총 게시물 수  : " + nTotalCount);
 		int listCount = 5;	// 한 페이지당 보여줄 게시물 수
 		int pageCount = 2; //   보여줄 페이지 수
@@ -204,71 +193,60 @@ public class ProjectService implements ItProjectService {
 	
 	@Override
 	public int noticeTitleCount() {
-		int nTotalCount = notice.noticeTitleCount();
+		int nTotalCount = notice_dao.noticeTitleCount();
 		return nTotalCount;
 	}
 	
 	@Override
 	public NoticeDto noticeView(String c_id) {
-		return notice.noticeView(c_id);
+		return notice_dao.noticeView(c_id);
 	}
 	
 	@Override
 	public int goodsArticleCount() {
-		return goods.goodsArticleCount();
+		return good_dao.goodsArticleCount();
 	}
 	
 	@Override
 	public List<GoodsDto> goodsList(Map<String, Integer> map) {
-		return goods.goodsList(map);
+		return good_dao.goodsList(map);
 	}
 	
 	@Override
 	public int articleCount() {
-		return goods.articleCount();
+		return good_dao.articleCount();
 	}
 	
 	@Override
 	public GoodsDto goodsView(String id) {
-		return goods.goodsView(id);
+		return good_dao.goodsView(id);
 	}
 	
 	@Override
 	public int writeGoods(Map<String, String> map) {
 		
-		int nResult = goods.writeGoods(map);
+		int nResult = good_dao.writeGoods(map);
 		return nResult;
 	}
 	
 	@Override
 	public List<ReplyDto> replyView_N(String nId) {
 		System.out.println(nId);
-		return reply.replyView_N(nId);
+		return reply_dao.replyView_N(nId);
 	}
 	
 	@Override
 	public int writeReply(Map<String, String> map) {
 		
-		int nResult = reply.writeReply(map);
+		int nResult = reply_dao.writeReply(map);
 		return nResult;
 	}
 	
 	@Override
 	public int deleteReply(String sid) {
-		int nResult = reply.deleteReply(sid);
+		int nResult = reply_dao.deleteReply(sid);
 		return nResult;
 	}
-//	@Override
-//	public int deleteUser(String id) {
-//		int nResult = dao.deleteUser(id);
-//		return nResult;
-//	}
-//
-//	@Override
-//	public int count() {
-//		int nTotalCount = dao.articleCount();
-//		return nTotalCount;
-//	}
 
 
 

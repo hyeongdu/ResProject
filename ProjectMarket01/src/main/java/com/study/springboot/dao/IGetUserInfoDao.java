@@ -6,7 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.study.springboot.dto.TestBoardDto;
 import com.study.springboot.dto.UserInfoDto;
+import com.study.springboot.dto.UserUpdateDto;
 @Mapper
 public interface IGetUserInfoDao {
-	public ArrayList<UserInfoDto> getUserinfo(String c_id);
+	public ArrayList<UserUpdateDto> getUserinfo(String c_id);
 }

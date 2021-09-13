@@ -20,8 +20,8 @@ public interface IAndroidRestaurantService {
 //	======호범
 	public int getJoinResult(Map<String, String> map);
 	public int getLoginResult(Map<String, String> map);
-	public int andCheckId(Map<String, String>map);
-	public int andCheckNickName(Map<String, String>map);
+	public int androidCheckId(String member_id);
+	public int androidCheckNickName(String member_nickname);
 	public String getCustomerResList(String c_id);
 	public String getReservationList(String c_id);
 	public String getMyInfo(String c_id);

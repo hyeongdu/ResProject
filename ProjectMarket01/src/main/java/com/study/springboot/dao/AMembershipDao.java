@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.study.springboot.dto.ACustomerListDto;
 import com.study.springboot.dto.AReservationDto;
@@ -20,8 +21,8 @@ public interface AMembershipDao {
 	ArrayList<ACustomerListDto> getMyInfo(String c_id);
 	ArrayList<ACustomerListDto> getMyProfile(String c_id);
 	public int setUpdateMyProfile(Map<String, String> map);
-	public int andCheckId(Map<String,String>map);
-	public int andCheckNickName(Map<String,String>map);
+	public int androidCheckId(@Param("member_id")String member_id);
+	public int androidCheckNickName(@Param("member_nickname")String member_nickname);
 	ArrayList<AReviewListDto> getMyReview(String c_id);
 	ArrayList<ARestaurantListDto> getrestaurantInfoMg(String m_id);
 	public int setStoreUpdate(Map<String, String> map);

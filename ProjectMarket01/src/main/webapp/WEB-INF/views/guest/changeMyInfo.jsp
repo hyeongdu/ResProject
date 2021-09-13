@@ -37,9 +37,9 @@
 		
 		
 		
-		if($('#c_name').val().length == 0) {
+		if($('#member_name').val().length == 0) {
 			alert("이름을 입력해주세요.");
-			$('#c_name').focus();
+			$('#member_name').focus();
 			return;
 		}
 		if(check == 0) {
@@ -47,23 +47,23 @@
 			return;
 		}
 		
-		if($('#c_email').val().length == 0) {
+		if($('#member_email').val().length == 0) {
 			alert("이메일 아이디를 입력해주세요.");
-			$('#c_email_id').focus();
+			$('#member_email_id').focus();
 			return;
 		}
 	
 		
-		if($('#c_phone1').val().length == 0) {
+		if($('#member_phone1').val().length == 0) {
 			alert("전화번호를 입력해주세요.");
 			$('#c_phone').focus();
 			return;
 		}
-		if($('#c_phone2').val().length == 0) {
+		if($('#member_phone2').val().length == 0) {
 			alert("전화번호를 입력해주세요.");
 			$('#c_phone').focus();
 			return;
-		}if($('#c_phone3').val().length == 0) {
+		}if($('#member_phone3').val().length == 0) {
 			alert("전화번호를 입력해주세요.");
 			$('#c_phone').focus();
 			return;
@@ -78,7 +78,7 @@
 		%>
 		var queryString = $("#reg_frm").serialize();
 		$.ajax({
-			url: '<%=conPath%>/security/modify',
+			url: '<%=conPath%>/admin/modify',
 			type: 'POST',
 			data: queryString,
 			dataType: 'text',
@@ -95,35 +95,35 @@
 	}
 	
 	function moveCursor(){
-		if($('#c_phone1').val().length ==  3) {
-			$('#c_phone2').focus();
+		if($('#member_phone1').val().length ==  3) {
+			$('#member_phone2').focus();
 		}
 	}
 	function moveCursor2(){
-		if($('#c_phone2').val().length ==  4) {
-			$('#c_phone3').focus();
+		if($('#member_phone2').val().length ==  4) {
+			$('#member_phone3').focus();
 		}
 	}
 	function moveCursor3(){
-		if($('#c_phone3').val().length ==  4) {
-			$('#nickname').focus();
+		if($('#member_phone3').val().length ==  4) {
+			$('#member_nickname').focus();
 		}
 	}
 	function check_nick() {
 		
-		if($('#nickname').val() == $('#ori_nickname').val()){
+		if($('#member_nickname').val() == $('#ori_member_nickname').val()){
 			alert("기존 닉네임과 같습니다");
 			check = 1;
-		}else if($('#nickname').val().lenth < 6){
+		}else if($('#member_nickname').val().lenth < 6){
 			alert("닉네임을 3자리 이상으로 만들어주세요.");
 		} else{
 		
 		{
-			var nickname = "nickname="+$('#nickname').val();
+			var member_nickname = "member_nickname="+$('#member_nickname').val();
 			$.ajax({
 				url: '/security/checkNick',
 				type: 'POST',
-				data: nickname,
+				data: member_nickname,
 				dataType: 'text',
 				success: function(json) {
 					var result = JSON.parse(json);
@@ -169,7 +169,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"   href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"   href="/mypage_main?=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -189,31 +189,31 @@
 				<c:forEach items="${myPageInfo}" var="myPageInfo">	
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">아이디</span>
-					<input type="text" class="form-control" id="c_id" name="c_id" readonly="true"  placeholder="* 6자리 이상" aria-label="아이디" aria-describedby="basic-addon1" value="${myPageInfo.c_id}">&nbsp;
+					<input type="text" class="form-control" id="member_id" name="member_id" readonly="readonly"  placeholder="* 6자리 이상" aria-label="아이디" aria-describedby="basic-addon1" value="${myPageInfo.member_id}">&nbsp;
 				</div>
 	
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">이름</span>
-  					<input type="text" class="form-control" id="c_name" name="c_name" readonly="true"  aria-label="이름" aria-describedby="basic-addon1" value="${myPageInfo.c_name}">
+  					<input type="text" class="form-control" id="member_name" name="member_name" readonly="readonly"  aria-label="이름" aria-describedby="basic-addon1" value="${myPageInfo.member_name}">
 				</div>
 				<div class="input-group mb-3">
 			
   					<span class="input-group-text col-3.5" id="basic-addon1">휴대폰</span>
-  					<input type="text" class="form-control" id="c_phone1" name="c_phone1" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor()" value="${fn:split(myPageInfo.c_phone,'-')[0]}">&nbsp;-&nbsp;
-  					<input type="text" class="form-control" id="c_phone2" name="c_phone2" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor2()" value="${fn:split(myPageInfo.c_phone,'-')[1]}">&nbsp;-&nbsp;
-  					<input type="text" class="form-control" id="c_phone3" name="c_phone3" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor3()" value="${fn:split(myPageInfo.c_phone,'-')[2]}"> 
+  					<input type="text" class="form-control" id="member_phone1" name="member_phone1" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor()" value="${fn:split(myPageInfo.member_phone,'-')[0]}">&nbsp;-&nbsp;
+  					<input type="text" class="form-control" id="member_phone2" name="member_phone2" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor2()" value="${fn:split(myPageInfo.member_phone,'-')[1]}">&nbsp;-&nbsp;
+  					<input type="text" class="form-control" id="member_phone3" name="member_phone3" aria-label="휴대폰" aria-describedby="basic-addon1" onkeyup = "moveCursor3()" value="${fn:split(myPageInfo.member_phone,'-')[2]}"> 
   		
 				</div>
 				
 				<div class="input-group mb-3">
   					<span class="input-group-text col-3.5" id="basic-addon1">닉네임</span>
-  					<input type="text" class="form-control" id="nickname" name="nickname"  placeholder="* 3자리 이상" aria-label="닉네임" aria-describedby="basic-addon1" value="${myPageInfo.nickname}">&nbsp;
-  					<input type="hidden" class="form-control" id="ori_nickname" name="ori_nickname"  placeholder="* 3자리 이상" aria-label="닉네임" aria-describedby="basic-addon1" value="${myPageInfo.nickname}">&nbsp;
+  					<input type="text" class="form-control" id="member_nickname" name="member_nickname"  placeholder="* 3자리 이상" aria-label="닉네임" aria-describedby="basic-addon1" value="${myPageInfo.member_nickname}">&nbsp;
+  					<input type="hidden" class="form-control" id="ori_member_nickname" name="ori_member_nickname"  placeholder="* 3자리 이상" aria-label="닉네임" aria-describedby="basic-addon1" value="${myPageInfo.member_nickname}">&nbsp;
   					<button type="button" class="btn btn-outline-warning" onclick="check_nick()">닉네임 중복확인</button>
 				</div>
 				<div class="input-group mb-3">
 					<span class="input-group-text col-3.5" id="basic-addon1">이메일</span>
-  					<input type="text" class="form-control" id="c_email" name="c_email" aria-label="c_email_id" value="${myPageInfo.c_email}">
+  					<input type="text" class="form-control" id="member_email" name="member_email" aria-label="member_email" value="${myPageInfo.member_email}">
   					
 				</div>
 				</c:forEach>

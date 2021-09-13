@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <c:set var="user"><sec:authentication property="principal"/></c:set>
 <!DOCTYPE html>
 <html>
@@ -21,6 +22,10 @@
     	.body2{
     		height:80vh;
     	}
+   	td .title {
+		  color: inherit;
+		  text-decoration: none;
+		}
 	</style>
 
     <!-- Bootstrap CSS -->
@@ -57,7 +62,7 @@
 		</sec:authorize>
 		<sec:authorize access="isAuthenticated()">
 		 <span class="navbar-text">
-   			<a class="text-secondary"  href="/myPageMain?c_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
+   			<a class="text-secondary"  href="/mypage_main?member_id=<sec:authentication property="principal.Username"/>">마이페이지</a>&nbsp;&nbsp;
    		 </span>
    	 		<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/logout'">로그아웃</button>&nbsp;
 		</sec:authorize>
@@ -83,23 +88,21 @@
 					<td>날짜</td>
 					<td>조회수</td>
 				</tr>
-				<c:forEach var="NoticeDto" items="${noticeList }">
+				<c:forEach var="noticeList" items="${noticeList}">
 				<tbody>
 				<tr>
-					<td>${NoticeDto.bid}</td>
-					<td>${NoticeDto.bname}</td>
-					<td><a href="/admin/content_view?bId=${NoticeDto.bid}">${NoticeDto.btitle}</a></td>
-					<td>${NoticeDto.bdate}</td>
-					<td>${NoticeDto.bhit}</td>
+					<td>${noticeList.noticeboard_number}</td>
+					<td>${noticeList.noticeboard_nickname}</td>
+					<td ><a href="/admin/content_view?noticeboard_number=${noticeList.noticeboard_number}" class="title">${noticeList.noticeboard_title}</a></td>
+					<td>${fn:split(noticeList.noticeboard_date,' ')[0]}</td>
+					<td>${noticeList.noticeboard_hit}</td>
 				</tr>
 				</tbody>
 				</c:forEach>
 				<tr>
 					<td colspan="5">
-					<button type="button" class="btn btn-outline-warning">
-					<c:set var="user"><sec:authentication property="principal.Username"/></c:set>
-					<a class="nav-link" href="/donoticewrite?user=${user}">글작성</a>
-					</button>
+					<c:set var="user"><sec:authentication property="principal.Username"/></c:set> 
+					<button type="button" class="btn btn-outline-warning" onclick="javascript:window.location='/notice_write?user=${user}'">글작성</button>
 					</td>
 				</tr>
 				<tr>

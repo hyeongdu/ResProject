@@ -57,8 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 			
 			auth.jdbcAuthentication().dataSource(dataSource)
-				.usersByUsernameQuery("select c_id as userName, c_pw as password, enabled from customer_list where c_id = ?")
-				.authoritiesByUsernameQuery("select c_id as userName, authority from customer_list where c_id = ?")
+				.usersByUsernameQuery("select member_id as userName, member_pw as password, enabled from member_list where member_id = ?")
+				.authoritiesByUsernameQuery("select member_id as userName, authority from member_list where member_id = ?")
 				.passwordEncoder(new StandardPasswordEncoder());
 			
 		// 쿼리문에 사용되는 userName, password, enabled, authority는 Spring에서 지정된 컬럼명입니다.

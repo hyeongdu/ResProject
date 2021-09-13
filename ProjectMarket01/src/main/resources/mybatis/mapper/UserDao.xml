@@ -6,42 +6,39 @@
 <mapper namespace="com.study.springboot.dao.ItUserDao">
 
 	<select id="userSelect" resultType="com.study.springboot.dto.UserDto">
-		select * from customer_list where c_id = #{0}
+		select * from member_list where member_id = #{0}
 	</select>
-	<delete id="deleteNotice">
-		delete from mvc_noticeboard where bId = #{0}
-	</delete>
 	<select id="modifyContent_view" resultType="com.study.springboot.dto.NoticeListDto">
 		select * from mvc_noticeboard where bId = #{0}
 	</select>
 
-	<select id="checkid" parameterType="java.util.HashMap" resultType="_int">
-		select count(c_id) from customer_list where c_id = #{item1}
+	<select id="checkId" resultType="_int">
+		select count(member_id) from member_list where member_id = #{member_id}
 	</select>
 	
-	<select id="checkNick" parameterType="java.util.HashMap" resultType="_int">
-		select count(nickname) from customer_list where nickname = #{item6}
+	<select id="checkNick"  resultType="_int">
+		select count(member_nickname) from member_list where member_nickname = #{member_nickname}
 	</select>
 		<select id="checkPwd" resultType="String">
-		select c_pw from customer_list where c_id = #{0}
+		select member_pw from member_list where member_id = #{member_id}
 	</select>
-		<select id="myPageInfo" resultType="com.study.springboot.dto.UserInfoDto">
-			select * from customer_list where c_id = #{0}
+		<select id="myPageInfo" resultType="com.study.springboot.dto.UserUpdateDto">
+			select * from member_list where member_id = #{member_id}
 	</select>
 
 	<insert id="join" parameterType="java.util.HashMap">
-		insert into customer_list (c_index, c_name, c_id, c_pw, c_phone,
-                     		 c_email, nickname, tdate, enabled)
-			values (customer_list_seq.nextval, #{item1}, #{item2}, #{item3},
-					#{item4}, #{item5}, #{item6}, sysdate, 1)
+		insert into member_list (member_number, member_name, member_id, member_pw, member_phone,
+                     		 member_email, member_nickname, member_date, enabled)
+			values (customer_list_seq.nextval, #{member_name}, #{member_id}, #{member_pw},
+					#{member_phone}, #{member_email}, #{member_nickname}, sysdate, 1)
 	</insert>
-	<update id="insertPwd">
-		update customer_list set c_pw=#{param1} where c_id=#{param2}
+	<update id="updatePwd">
+		update member_list set member_pw=#{member_pw} where member_id=#{member_id}
 	</update>
 	<update id="updateInfo" parameterType="java.util.HashMap">
-		update customer_list set c_phone=#{item2},nickname=#{item4},c_email=#{item3}  where c_id=#{item1}
+		update member_list set member_phone=#{member_phone},member_nickname=#{member_nickname},member_email=#{member_email}  where member_id=#{member_id}
 	</update>
 	<select id="getNickname" resultType="String">
-		select nickname from customer_list where c_id=#{0}
+		select member_nickname from member_list where member_id=#{member_id}
 	</select>
 </mapper>
