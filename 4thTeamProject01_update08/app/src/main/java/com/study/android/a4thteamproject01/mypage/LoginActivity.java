@@ -117,11 +117,7 @@ public class LoginActivity extends AppCompatActivity {
         byte[] bytes = md.digest();
         String password = String.format("%64x", new BigInteger(1, bytes));
 
-        Map<String, String> map = new HashMap<>();
-        map.put("c_id", c_id.getText().toString());
-        map.put("c_pw", password);
-
-        mRetrofit.mService.postLoginData((HashMap<String, String>) map).enqueue(new Callback<Integer>() {
+        mRetrofit.mService.postLoginData(c_id.getText().toString(), password).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if(response.isSuccessful()){

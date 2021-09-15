@@ -18,9 +18,8 @@ public interface RetrofitMemSvc {
     @POST("android/join")
     Call<Integer> postJoinData(@FieldMap HashMap<String, String> map);
 
-    @FormUrlEncoded
-    @POST("android/applogin")
-    Call<Integer> postLoginData(@FieldMap HashMap<String, String> map);
+    @GET("android/applogin")
+    Call<Integer> postLoginData(@Query("member_id") String memeber_id,@Query("member_pw") String memeber_pw);
 
     @GET("android/member_res_list")
     Call<JSONObjectResult2> getMyReservData(@Query("member_id") String c_id);

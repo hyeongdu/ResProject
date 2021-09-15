@@ -17,7 +17,7 @@ public class RetrofitMain {
 //    }
 
     Retrofit retrofit=new Retrofit.Builder()
-            .baseUrl("http://192.168.35.16:8081/")
+            .baseUrl("http://192.168.35.203:8081/")
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build();

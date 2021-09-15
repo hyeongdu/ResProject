@@ -2,7 +2,7 @@
     <string name="app_name">4thTeamProject01</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="ipv4">http://192.168.35.16:8081/</string>
+    <string name="ipv4">http://192.168.35.203:8081/</string>
     <string name="agreeContent">1. 고객님의 주문에 따라 개별적으로 생산 또는 조리된 음식은 업주에게 회복할 수 없는 손해가
                                 발생하므로 단순 변심에 의한 청약철회는 할 수 없습니다.\n
                                 2. 고객님과 수 차례 연락을 시도한 후 연락이 되지 않는 경우 음식이 변질되거나 부패될

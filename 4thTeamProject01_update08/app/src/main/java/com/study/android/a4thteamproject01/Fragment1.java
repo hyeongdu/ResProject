@@ -68,8 +68,7 @@ public class Fragment1 extends Fragment {
 
     Button button;
     int nCount;
-    String latitude;
-    String longtitude;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,15 +89,10 @@ public class Fragment1 extends Fragment {
         viewFlipper.setOutAnimation(getActivity(), android.R.anim.slide_out_right);
 
 
-//        Bundle bundle=getArguments();
-//        latitude=bundle.getString("latitude");
-//        longtitude=bundle.getString("longtitude");
-
-
 
         retroservice=new RetrofitMain();
         //인기맛집 리스트
-        retroservice.service1.getPosts("likelist").enqueue(new Callback<JSONObjectResult>(){
+        retroservice.service1.getPosts("restaurantList").enqueue(new Callback<JSONObjectResult>(){
 
             @Override
             public void onResponse(retrofit2.Call<JSONObjectResult> call, Response<JSONObjectResult> response) {
@@ -166,112 +160,6 @@ public class Fragment1 extends Fragment {
         return rootView;
     }
 
-
-//    public void onMyLocatBtnClicked(View v){
-//        Intent intent = new Intent(getActivity(), NaverMap.class);
-//        Log.d(TAG, "버튼 클릭" + latitude + ", "+longtitude);
-//        intent.putExtra("latitude",latitude);
-//        intent.putExtra("longitude",longtitude);
-//        startActivity(intent);
-//    }
-
-    private void requestMyLocation() {
-    LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-    try {
-
-        long minTime = 10000;
-        float minDistance = 0;
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            return;
-        }
-
-        manager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-
-                minTime,
-                minDistance,
-                new LocationListener() {
-                    @Override
-                    public void onLocationChanged(Location location) {
-//                        Log.d(TAG, "onLocationChanged111111");
-                        showCurrentLocation(location);
-                        manager.removeUpdates(this);
-                    }
-
-                    @Override
-                    public void
-                    onStatusChanged(String provider, int status, Bundle extras) {
-                        Log.d(TAG, "onLocationChanged222222");
-                    }
-
-                    @Override
-                    public void
-                    onProviderEnabled(String provider) {
-                        Log.d(TAG, "onLocationChanged33333");
-                    }
-
-                    @Override
-                    public void
-                    onProviderDisabled(String provider) {
-                        Log.d(TAG, "onLocationChanged444444");
-                    }
-                }
-
-        );
-
-        Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (lastLocation != null) {
-            this.latitude = String.valueOf(lastLocation.getLatitude());
-            Log.d(TAG,"lastLocation : " + String.valueOf(lastLocation.getLatitude()));
-            this.longtitude = String.valueOf(lastLocation.getLongitude());
-            Log.d(TAG,"lastLocation : " + String.valueOf(lastLocation.getLongitude()));
-        }
-
-        manager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                minTime,
-                minDistance,
-                new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-//                        Log.d(TAG, "onLocationChanged55555");
-                        showCurrentLocation(location);
-                        manager.removeUpdates(this);
-                    }
-
-                    @Override
-                    public void
-                    onStatusChanged(String provider, int status, Bundle extras) {
-                        Log.d(TAG, "onLocationChanged666666");
-                    }
-
-                    @Override
-                    public void
-                    onProviderEnabled(String provider) {
-                        Log.d(TAG, "onLocationChanged77777");
-                    }
-
-                    @Override
-                    public void
-                    onProviderDisabled(String provider) {
-                        Log.d(TAG, "onLocationChanged88888");
-                    }
-                }
-        );
-
-    } catch (SecurityException e) {
-        e.printStackTrace();
-    }
-}
-
-    private void showCurrentLocation(Location location) {
-        LatLng curPoint = new LatLng(location.getLatitude(), location.getLongitude());
-
-        this.latitude = String.valueOf(location.getLatitude());
-        this.longtitude = String.valueOf(location.getLongitude());
-
-    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {

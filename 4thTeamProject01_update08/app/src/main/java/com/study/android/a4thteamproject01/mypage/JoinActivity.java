@@ -82,7 +82,41 @@ public class JoinActivity extends AppCompatActivity {
         pw_message2.setVisibility(View.GONE);
 
         pwCheckMessage();
+        phoneTextWatcher();
     }
+    public void phoneTextWatcher(){
+
+        c_phone.addTextChangedListener(new TextWatcher() {
+            String before_text;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                before_text = s.toString();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.toString().length() > before_text.length())
+                if(s.toString().length() == 3){
+                    c_phone.setText(s.toString() + "-");
+                    c_phone.setSelection(c_phone.getText().length());
+                } else if(s.toString().length() == 8){
+                    c_phone.setText(s.toString() + "-");
+                    c_phone.setSelection(c_phone.getText().length());
+                } else if(s.toString().length() == 14){
+                    c_phone.setText(before_text);
+                    c_phone.setSelection(c_phone.getText().length());
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
     public void pwCheckMessage(){
         c_pw.addTextChangedListener(new TextWatcher() {
             @Override

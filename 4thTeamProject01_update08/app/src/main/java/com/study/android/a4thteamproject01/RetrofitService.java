@@ -32,17 +32,17 @@ public interface RetrofitService {
     @POST("android/insertreserveinfo")
     Call<Integer> getInsertReserveInfo(@FieldMap HashMap<String, Object> map);
     @GET("android/getrsvmeminfo")
-    Call<UserDto> getRsvMemInfo(@Query("c_id") String c_id);
+    Call<UserDto> getRsvMemInfo(@Query("member_id") String c_id);
     @GET("android/getrsvinfo")
     Call<BookedListDto> getRsvInfo(@Query("r_rsvnum") String r_rsvnum);
     @GET("android/{post}")
     Call<Integer> checkLike(@Path("post") String post, @Query("m_number") String m_number,@Query("r_name") String r_name,@Query("c_id") String c_id);
     @GET("android/getlikelist")
-    Call<JSONObjectResult> getLikeList(@Query("id") String id);
+    Call<JSONObjectResult> getLikeList(@Query("member_id") String id);
     @GET("android/getreviewlist")
     Call<ArrayList<ReviewListDto>> getReviewList(@Query("r_name") String r_name, @Query("m_number") String m_number);
     // frg5 데이터 가져오기
     @GET("android/myPage")
-    Call<JSONObjectResult> getMyprofile(@Query("c_id") String c_id);
+    Call<JSONObjectResult> getMyprofile(@Query("member_id") String c_id);
 
 }
