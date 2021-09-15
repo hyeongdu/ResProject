@@ -655,9 +655,9 @@ public class MyController {
 	    }
 	  //리뷰리스트 가져오기
 	  @RequestMapping("/android/getreviewlist")
-	  public @ResponseBody String getReviewList(HttpServletRequest request) {
+	  public @ResponseBody String getReviewList(@RequestParam("m_number")String m_number,@RequestParam("r_name")String r_name) {
 		  System.out.println("Controller: getReviewList");
-		  return and_restaurant_service.getReviewList(request.getParameter("m_number"), request.getParameter("r_name"));
+		  return and_restaurant_service.getReviewList(m_number, r_name);
 	  }
 	  
 	  //푸쉬알림
@@ -668,22 +668,17 @@ public class MyController {
 		}
 		//예약 체크
 		@RequestMapping("/android/checkReservation")
-		public @ResponseBody String checkReservation(HttpServletRequest request) throws Exception {
+		public @ResponseBody String checkReservation(@RequestParam("r_rsvnumber")String r_rsvnumber) throws Exception {
 			System.out.println("checkReservation ");
-			String r_rsvnumber = request.getParameter("r_rsvnumber");
 			String check=and_restaurant_service.checkReservation(r_rsvnumber);
-			
-			System.out.println("controller checkReservation: "+check);
+
 			return check;
 		}
 		//노쇼 체크 
 			@RequestMapping("/android/noCheckReservation")
-			public @ResponseBody String noCheckReservation(HttpServletRequest request) throws Exception {
+			public @ResponseBody String noCheckReservation(@RequestParam("r_rsvnumber")String r_rsvnumber) throws Exception {
 				System.out.println("noCheckReservation ");
-				String r_rsvnumber = request.getParameter("r_rsvnumber");
 				String check=and_restaurant_service.noCheckReservation(r_rsvnumber);
-				
-				System.out.println("controller noCheckReservation: "+check);
 				return check;
 
 		}
@@ -803,15 +798,15 @@ public class MyController {
 	
 //	==================안드로이드====================
 	//인기맛집 리스트 목록
-		@RequestMapping("/android/likelist")
-		public @ResponseBody String likelistBoard(Model model) {
-			System.out.println("Controller:likelist data");
-			String likelist=and_restaurant_service.getlikeList();
+		@RequestMapping("/android/restaurantList")
+		public @ResponseBody String restaurantList() {
+			System.out.println("Controller:restaurantList");
+			String likelist=and_restaurant_service.restaurantList();
 			return likelist;
 		}
 		//최근등록 맛집 리스트
 		@RequestMapping("/android/recentlist")
-		public @ResponseBody String RecentlistBoard(Model model) {
+		public @ResponseBody String RecentlistBoard() {
 			System.out.println("Controller:RecentListBoard");
 			String recentlist=and_restaurant_service.getrecentList();
 			
@@ -822,13 +817,10 @@ public class MyController {
 		
 		//검색어 입력시 검색매장 출력
 		@RequestMapping("/android/search")
-		public @ResponseBody String searchlistBoard(HttpServletRequest request) {
+		public @ResponseBody String searchlistBoard(@RequestParam("search")String search) {
 			System.out.println("Controller:searchlist data");
 			
-			String searchword=request.getParameter("search");
-			System.out.println("검색어: "+searchword);
-			
-			String searchlist=and_restaurant_service.getsearchList(searchword);
+			String searchlist=and_restaurant_service.getsearchList(search);
 			return searchlist;
 		}
 		
@@ -862,14 +854,10 @@ public class MyController {
 
 			//예약시 로그인 아이디로 회원정보 가져오기
 			@RequestMapping("/android/getrsvmeminfo")
-			public @ResponseBody String getRsvMemInfo(HttpServletRequest request) {
+			public @ResponseBody String getRsvMemInfo(@RequestParam("member_id")String member_id) {
 				System.out.println("Controller:getrsvmeminfo data");
-				
-				String c_id=request.getParameter("c_id");
-
-				System.out.println("c_id: "+c_id);
-				
-				String meminfo=and_reservation_service.getRsvMemInfo(c_id);
+	
+				String meminfo=and_reservation_service.getRsvMemInfo(member_id);
 				return meminfo;
 			}
 			//예약정보 저장
@@ -878,7 +866,7 @@ public class MyController {
 				System.out.println("Controller: insert reserve info");
 				
 				Map<String, Object> rsv=new HashMap<>();
-				rsv.put("c_id",request.getParameter("c_id"));
+				rsv.put("memeber_id",request.getParameter("memeber_id"));
 				rsv.put("r_rsvnumber", request.getParameter("r_rsvnumber"));
 				rsv.put("m_number", request.getParameter("m_number"));
 				rsv.put("r_name", request.getParameter("r_name"));
@@ -900,13 +888,11 @@ public class MyController {
 			}
 			//예약완료시 예약고유번호로 예약정보 가져오기
 			@RequestMapping("/android/getrsvinfo")
-			public @ResponseBody String getRsvInfo(HttpServletRequest request) {
+			public @ResponseBody String getRsvInfo(@RequestParam("r_rsvnum")String r_rsvnum) {
 				System.out.println("Controller:getrsvinfo data");
-				
-				String r_rsvnumber=request.getParameter("r_rsvnum");
-				System.out.println("r_rsvnumber: "+r_rsvnumber);
-						
-				String rsvinfo=and_reservation_service.getRsvInfo(r_rsvnumber);
+
+
+				String rsvinfo=and_reservation_service.getRsvInfo(r_rsvnum);
 				return rsvinfo;
 			}
 			//좋아요 확인		
@@ -945,11 +931,10 @@ public class MyController {
 			}
 			//좋아요 리스트 
 			@RequestMapping("/android/getlikelist")
-			public @ResponseBody String getLikeList(HttpServletRequest request) {
+			public @ResponseBody String getLikeList(@RequestParam("member_id")String member_id) {
 				System.out.println("COntroller : getlike list");
-				String c_id=request.getParameter("id");
 				
-				String result=and_restaurant_service.getLikeList(c_id);
+				String result=and_restaurant_service.getLikeList(member_id);
 				return result;
 			}
 //			============================호범
@@ -957,15 +942,10 @@ public class MyController {
 			@RequestMapping("/android/applogin")
 			public @ResponseBody int appLogin(HttpServletRequest request) {
 				System.out.println("Controller:Login");
-				String c_id = request.getParameter("c_id");
-				String c_pw = request.getParameter("c_pw");
+				String member_id = request.getParameter("member_id");
+				String member_pw = request.getParameter("member_pw");
 
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("item1", c_id);
-				map.put("item2", c_pw);
-				System.out.println(map.toString());
-
-				int nResult = and_restaurant_service.getLoginResult(map);
+				int nResult = and_restaurant_service.getLoginResult(member_id, member_pw);
 
 				return nResult;
 			}
@@ -1021,7 +1001,6 @@ public class MyController {
 				String c_eMail = request.getParameter("member_email");
 				String nickname = request.getParameter("member_nickname");
 				String token = request.getParameter("token");
-
 				Map<String, String> map = new HashMap<String, String>();
 				map.put("member_name", c_name);
 				map.put("member_id", c_id);
@@ -1029,7 +1008,7 @@ public class MyController {
 				map.put("member_phone", c_phone);
 				map.put("member_email", c_eMail);
 				map.put("member_nickname", nickname);
-				map.put("token", token);
+				map.put("member_token", token);
 				System.out.println(map);
 
 				int nResult = and_restaurant_service.getJoinResult(map);
@@ -1040,55 +1019,51 @@ public class MyController {
 
 			// 회원의 예약 내역
 			@RequestMapping("/android/member_res_list")
-			public @ResponseBody String customerResList(HttpServletRequest request, Model model) {
+			public @ResponseBody String customerResList(@RequestParam("member_id")String memeber_id) {
 				System.out.println("Controller:CustomerResList");
-				String c_id = request.getParameter("c_id");
-				String customerResList = and_restaurant_service.getCustomerResList(c_id);
+				String customerResList = and_restaurant_service.getCustomerResList(memeber_id);
 				return customerResList;
 			}
 			//업주 가게 예약 리스
 			@RequestMapping("/android/reservationList")
-			public @ResponseBody String reservationList(HttpServletRequest request, Model model) {
-				System.out.println("Controller:reservationList111111111111");
-				String c_id = request.getParameter("c_id");
-				String customerResList = and_restaurant_service.getReservationList(c_id);
+			public @ResponseBody String reservationList(@RequestParam("memeber_id")String memeber_id) {
+				System.out.println("Controller:reservationList");
+				String customerResList = and_restaurant_service.getReservationList(memeber_id);
 				return customerResList;
 			}
 
 			// Frg5 화면 데이터 불러오기
 			@RequestMapping("/android/myPage")
-			public @ResponseBody String myPage(HttpServletRequest request) {
-				System.out.println("Controller:MyPage");
-				String c_id = request.getParameter("c_id");
-				String myProfile = and_restaurant_service.getMyProfile(c_id);
+			public @ResponseBody String myPage(@RequestParam("member_id")String member_id) {
+				System.out.println("Controller:MyPage" + member_id);
+				String myProfile = and_restaurant_service.getMyProfile(member_id);
 				return myProfile;
 			}
 
 			// 회원정보 수정에 필요한 데이터 불러오기
 			@RequestMapping("/android/my_profile_data")
-			public @ResponseBody String myProfileMod(HttpServletRequest request) {
+			public @ResponseBody String myProfileMod(@RequestParam("memeber_id")String memeber_id) {
 				System.out.println("Controller:MyPage");
-				String c_id = request.getParameter("c_id");
-				String modifyBaseData = and_restaurant_service.getModifyData(c_id);
+				String modifyBaseData = and_restaurant_service.getModifyData(memeber_id);
 				return modifyBaseData;
 			}
 
-			// 회원정보 수정 전 본인확인
-			@RequestMapping("/android/checkPwd")
-			public @ResponseBody int checkPwd(HttpServletRequest request) {
-				System.out.println("Controller:Check Password");
-				String c_id = request.getParameter("c_id");
-				String c_pw = request.getParameter("c_pw");
-
-				Map<String, String> map = new HashMap<String, String>();
-				map.put("item1", c_id);
-				map.put("item2", c_pw);
-				System.out.println(map.toString());
-
-				int nResult = and_restaurant_service.getLoginResult(map);
-
-				return nResult;
-			}
+//			// 회원정보 수정 전 본인확인
+//			@RequestMapping("/android/checkPwd")
+//			public @ResponseBody int checkPwd(HttpServletRequest request) {
+//				System.out.println("Controller:Check Password");
+//				String c_id = request.getParameter("c_id");
+//				String c_pw = request.getParameter("c_pw");
+//
+//				Map<String, String> map = new HashMap<String, String>();
+//				map.put("item1", c_id);
+//				map.put("item2", c_pw);
+//				System.out.println(map.toString());
+//
+//				int nResult = and_restaurant_service.getLoginResult(map);
+//
+//				return nResult;
+//			}
 
 			// 회원정보 수정(닉네임 제외)
 			@RequestMapping("/android/modify_profile")
@@ -1097,17 +1072,16 @@ public class MyController {
 
 				System.out.println(request.getParameter("userid"));
 
-				String c_name = request.getParameter("c_name");
-				String c_id = request.getParameter("c_id");
-				String c_pw = request.getParameter("c_pw");
-				String c_phone = request.getParameter("c_phone");
-				String c_eMail = request.getParameter("c_email");
+				String memeber_id = request.getParameter("c_id");
+				String memeber_pw = request.getParameter("c_pw");
+				String memeber_phone = request.getParameter("c_phone");
+				String memeber_email = request.getParameter("c_email");
 
 				Map<String, String> map = new HashMap<String, String>();
-				map.put("item1", c_pw);
-				map.put("item2", c_phone);
-				map.put("item3", c_eMail);
-				map.put("item4", c_id);
+				map.put("memeber_pw", memeber_pw);
+				map.put("memeber_phone", memeber_phone);
+				map.put("memeber_email", memeber_email);
+				map.put("memeber_id", memeber_id);
 				System.out.println(map);
 
 				int nResult = and_restaurant_service.setUpdateMyProfile(map);
@@ -1118,13 +1092,10 @@ public class MyController {
 			
 			// 내가 쓴 리뷰
 			@RequestMapping("/android/my_review")
-			public @ResponseBody String myReview(HttpServletRequest request, Model model) {
+			public @ResponseBody String myReview(@RequestParam("memeber_id")String memeber_id) {
 				System.out.println("Controller:MyReview");
 
-				String c_id = request.getParameter("c_id");
-				System.out.println("getParameter(c_id) = " + c_id);
-
-				String myReviewList = and_restaurant_service.getMyReview(c_id);
+				String myReviewList = and_restaurant_service.getMyReview(memeber_id);
 
 				return myReviewList;
 			}
@@ -1162,18 +1133,18 @@ public class MyController {
 				return nResult;
 			}
 
-			// 닉네임 변경
-			@RequestMapping("/android/nick_update")
-			public @ResponseBody int setUpdateNickname(HttpServletRequest request) {
-				System.out.println("Controller:Nickname Update");
-				
-				String nickname = request.getParameter("nickname");
-				String c_id = request.getParameter("c_id");
-				
-				int nResult = and_restaurant_service.setUpdateNickname(nickname, c_id);
-				
-				return nResult;
-			}
+//			// 닉네임 변경
+//			@RequestMapping("/android/nick_update")
+//			public @ResponseBody int setUpdateNickname(HttpServletRequest request) {
+//				System.out.println("Controller:Nickname Update");
+//				
+//				String nickname = request.getParameter("nickname");
+//				String c_id = request.getParameter("c_id");
+//				
+//				int nResult = and_restaurant_service.setUpdateNickname(nickname, c_id);
+//				
+//				return nResult;
+//			}
 
 //			#===========================형두==============
 			@RequestMapping("/android/ForMarker")
@@ -1293,15 +1264,7 @@ public class MyController {
 					String path = ResourceUtils
 								.getFile("classpath:static/upload").toPath().toString();
 					
-					ClassPathResource classPathResource = new ClassPathResource("static/upload");
-
-					System.out.println("111111111111111111" + classPathResource.exists());
 					MultipartRequest multi;
-
-//					try (InputStream is = new BufferedInputStream(classPathResource.getInputStream())) {
-//						System.out.println("안녕");
-//						multi = new MultipartRequest(request, is.toString(), size, "UTF-8", new DefaultFileRenamePolicy());
-//					}
 					
 					
 					multi = new MultipartRequest(request,path, size, "UTF-8", new DefaultFileRenamePolicy());

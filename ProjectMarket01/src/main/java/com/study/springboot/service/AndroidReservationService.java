@@ -15,12 +15,12 @@ import com.study.springboot.dto.AReservationDto;
 @Service
 public class AndroidReservationService implements IAndroidReservationService{
 	@Autowired
-	AReservationDao idao;
+	AReservationDao reservation_dao;
 	//예약 시 로그인 아이디값으로 회원정보를 가져옴.
 	public String getRsvMemInfo(String c_id) {
 		System.out.println("Service : getRerservation Member Info");
 		ArrayList<ACustomerListDto> list=new ArrayList<>();
-		list=idao.getRsvMemInfoDao(c_id);
+		list=reservation_dao.getRsvMemInfoDao(c_id);
 		
 		JSONArray jsonArray1 = new JSONArray();
 
@@ -38,7 +38,7 @@ public class AndroidReservationService implements IAndroidReservationService{
 	public int insertReservationInfo(Map<String, Object> map) {
 		System.out.println("Service : insert reservation info");
 		
-		int nResult=idao.insertRsvDao(map);
+		int nResult=reservation_dao.insertRsvDao(map);
 		System.out.println("service nresult: "+nResult);
 		return nResult;		
 	}
@@ -46,7 +46,7 @@ public class AndroidReservationService implements IAndroidReservationService{
 	public String getRsvInfo(String r_rsvnumber) {
 		System.out.println("service: get reservation info by rsvnum");
 		ArrayList<AReservationDto> list=new ArrayList<>();
-		list=idao.getRsvInfoDao(r_rsvnumber);
+		list=reservation_dao.getRsvInfoDao(r_rsvnumber);
 		
 		JSONArray jsonArray1 = new JSONArray();
 		JSONObject jb = new JSONObject();

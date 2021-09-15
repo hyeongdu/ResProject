@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.study.springboot.dto.ACustomerListDto;
 import com.study.springboot.dto.AReservationDto;
@@ -11,5 +12,5 @@ import com.study.springboot.dto.AReservationDto;
 public interface AReservationDao {
 	public int insertRsvDao(Map<String, Object> map);
 	ArrayList<ACustomerListDto> getRsvMemInfoDao(String c_id);
-	ArrayList<AReservationDto> getRsvInfoDao(String r_rsvnumber);
+	ArrayList<AReservationDto> getRsvInfoDao(@Param("r_rsvnumber")String r_rsvnumber);
 }

@@ -4,8 +4,8 @@
 	
 <mapper namespace="com.study.springboot.dao.AMembershipDao">
 
-<select resultType="_int" parameterType="java.util.HashMap" id="getLoginResult">
-	<![CDATA[select count(*) from customer_list where c_id = #{item1} and c_pw = #{item2}]]>
+<select resultType="_int"  id="getLoginResult">
+	<![CDATA[select count(*) from member_list where member_id = #{member_id} and member_pw = #{member_pw}]]>
 </select>
 
 <select resultType="_int"  id="androidCheckId">
@@ -18,7 +18,7 @@
 
 
 <select resultType="com.study.springboot.dto.AReservationDto" id="getCustomerResList">
-	<![CDATA[select * from booked_list where c_id = #{_id} order by r_index desc]]>
+	<![CDATA[select * from booked_list where memeber_id = #{memeber_id} order by r_index desc]]>
 </select>
 <select resultType="com.study.springboot.dto.AReservationDto" id="getReservationList">
 	<![CDATA[select * from booked_list where r_name = #{0} order by r_index desc]]>
@@ -31,11 +31,11 @@
 
 
 <select resultType="com.study.springboot.dto.ACustomerListDto" id="getMyProfile">
-	<![CDATA[select * from customer_list where c_id = #{_id}]]>
+	<![CDATA[select * from member_list where memeber_id = #{member_id}]]>
 </select>
 
 <select resultType="com.study.springboot.dto.AReviewListDto" id="getMyReview">
-	<![CDATA[select * from review where c_id = #{_id}]]>
+	<![CDATA[select * from review_list where member_id = #{memeber_id}]]>
 </select>
 
 <select id="getrestaurantInfoMg" resultType="com.study.springboot.dto.ARestaurantListDto">
@@ -43,19 +43,19 @@
 </select>
 
 <select id="searchR_name" resultType="com.study.springboot.dto.ACustomerListDto">
-		select r_name from customer_list where c_id = #{0}
+		select r_name from customer_list where memeber_id = #{memeber_id}
 </select>
 
 
 <insert parameterType="java.util.HashMap" id="getJoinResult">
 	insert into member_list (member_number, member_name, member_id, member_pw, member_phone,
-                     		 member_email, member_nickname, token, member_date, enabled)
+                     		 member_email, member_nickname, member_token, member_date, enabled)
 			values (customer_list_seq.nextval, #{member_name}, #{member_id}, #{member_pw},
 					#{member_phone}, #{member_email}, #{member_nickname},#{member_token}, sysdate, 1)
 </insert>
 
 <update parameterType="java.util.HashMap" id="setUpdateMyProfile">
-	<![CDATA[update customer_list set c_pw = #{item1}, c_phone = #{item2}, c_eMail = #{item3} where c_id = #{item4}]]>
+	<![CDATA[update customer_list set memeber_pw = #{memeber_pw}, memeber_phone = #{memeber_phone}, memeber_email = #{memeber_email} where memeber_id = #{memeber_id}]]>
 </update>
 
 <update parameterType="java.util.HashMap" id="setStoreUpdate">
