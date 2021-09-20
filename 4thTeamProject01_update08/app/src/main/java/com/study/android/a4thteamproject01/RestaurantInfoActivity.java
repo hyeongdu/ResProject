@@ -451,8 +451,6 @@ public class RestaurantInfoActivity extends AppCompatActivity {
                 {
                     //로그인 화면으로 넘어가기
                     Intent intent = new Intent(RestaurantInfoActivity.this, LoginActivity.class);
-//                    intent.putExtra("업소관리번호",storenumber);
-//                    intent.putExtra("매장명",storename);
                     startActivity(intent);
 //                    Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
                 }

@@ -66,14 +66,8 @@ public class Fragment2 extends Fragment {
                     public void onResponse(Call<JSONObjectResult> call, Response<JSONObjectResult> response) {
                         if(response.isSuccessful()){
                             JSONObjectResult searchlist=response.body();
-//                            Log.d(TAG, "검색 리스트 callback: "+String.valueOf(searchlist));
                             if(searchlist.searchresult==null){
                                 textView.setText("(검색 결과가 없습니다.)");
-//                                TextView text=new TextView(rootView.getContext());
-//                                text.setText("(검색 가능한 매장이 없습니다)");
-//                                text.setTextSize(20);
-//                                text.setTextColor(Color.BLACK);
-//                                layout.addView(text);
 
                             }else{
                                 textView.setText("");

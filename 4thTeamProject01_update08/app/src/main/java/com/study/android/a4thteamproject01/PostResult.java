@@ -1,7 +1,5 @@
 package com.study.android.a4thteamproject01;
 
-import com.google.gson.annotations.SerializedName;
-
 public class PostResult {
 
     private int r_index;

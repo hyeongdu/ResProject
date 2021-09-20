@@ -52,8 +52,8 @@ import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.study.springboot.dao.IGetUserInfoDao;
 import com.study.springboot.dao.ITestBoardDao;
+import com.study.springboot.dto.ARestaurantListDto;
 import com.study.springboot.dto.NoticeListDto;
-import com.study.springboot.dto.TestBoardDto;
 import com.study.springboot.dto.TokenDto;
 import com.study.springboot.dto.UserDto;
 import com.study.springboot.dto.UserInfoDto;
@@ -866,7 +866,7 @@ public class MyController {
 				System.out.println("Controller: insert reserve info");
 				
 				Map<String, Object> rsv=new HashMap<>();
-				rsv.put("memeber_id",request.getParameter("memeber_id"));
+				rsv.put("member_id",request.getParameter("member_id"));
 				rsv.put("r_rsvnumber", request.getParameter("r_rsvnumber"));
 				rsv.put("m_number", request.getParameter("m_number"));
 				rsv.put("r_name", request.getParameter("r_name"));
@@ -1019,16 +1019,16 @@ public class MyController {
 
 			// 회원의 예약 내역
 			@RequestMapping("/android/member_res_list")
-			public @ResponseBody String customerResList(@RequestParam("member_id")String memeber_id) {
+			public @ResponseBody String customerResList(@RequestParam("member_id")String member_id) {
 				System.out.println("Controller:CustomerResList");
-				String customerResList = and_restaurant_service.getCustomerResList(memeber_id);
+				String customerResList = and_restaurant_service.getCustomerResList(member_id);
 				return customerResList;
 			}
 			//업주 가게 예약 리스
 			@RequestMapping("/android/reservationList")
-			public @ResponseBody String reservationList(@RequestParam("memeber_id")String memeber_id) {
+			public @ResponseBody String reservationList(@RequestParam("member_id")String member_id) {
 				System.out.println("Controller:reservationList");
-				String customerResList = and_restaurant_service.getReservationList(memeber_id);
+				String customerResList = and_restaurant_service.getReservationList(member_id);
 				return customerResList;
 			}
 
@@ -1042,9 +1042,9 @@ public class MyController {
 
 			// 회원정보 수정에 필요한 데이터 불러오기
 			@RequestMapping("/android/my_profile_data")
-			public @ResponseBody String myProfileMod(@RequestParam("memeber_id")String memeber_id) {
+			public @ResponseBody String myProfileMod(@RequestParam("member_id")String member_id) {
 				System.out.println("Controller:MyPage");
-				String modifyBaseData = and_restaurant_service.getModifyData(memeber_id);
+				String modifyBaseData = and_restaurant_service.getModifyData(member_id);
 				return modifyBaseData;
 			}
 
@@ -1072,16 +1072,16 @@ public class MyController {
 
 				System.out.println(request.getParameter("userid"));
 
-				String memeber_id = request.getParameter("c_id");
-				String memeber_pw = request.getParameter("c_pw");
-				String memeber_phone = request.getParameter("c_phone");
-				String memeber_email = request.getParameter("c_email");
+				String member_id = request.getParameter("c_id");
+				String member_pw = request.getParameter("c_pw");
+				String member_phone = request.getParameter("c_phone");
+				String member_email = request.getParameter("c_email");
 
 				Map<String, String> map = new HashMap<String, String>();
-				map.put("memeber_pw", memeber_pw);
-				map.put("memeber_phone", memeber_phone);
-				map.put("memeber_email", memeber_email);
-				map.put("memeber_id", memeber_id);
+				map.put("member_pw", member_pw);
+				map.put("member_phone", member_phone);
+				map.put("member_email", member_email);
+				map.put("member_id", member_id);
 				System.out.println(map);
 
 				int nResult = and_restaurant_service.setUpdateMyProfile(map);
@@ -1092,10 +1092,10 @@ public class MyController {
 			
 			// 내가 쓴 리뷰
 			@RequestMapping("/android/my_review")
-			public @ResponseBody String myReview(@RequestParam("memeber_id")String memeber_id) {
+			public @ResponseBody String myReview(@RequestParam("member_id")String member_id) {
 				System.out.println("Controller:MyReview");
 
-				String myReviewList = and_restaurant_service.getMyReview(memeber_id);
+				String myReviewList = and_restaurant_service.getMyReview(member_id);
 
 				return myReviewList;
 			}
@@ -1157,7 +1157,7 @@ public class MyController {
 //				System.out.println(forSqlAddress);
 				System.out.println(latitude);
 				System.out.println(longitude);
-				ArrayList<TestBoardDto> list = testdao.testSelect(latitude,longitude);
+				ArrayList<ARestaurantListDto> list = testdao.testSelect(latitude,longitude);
 
 				 JSONObject fjb = new JSONObject(); 
 				 JSONArray jsonArray1 = new JSONArray();

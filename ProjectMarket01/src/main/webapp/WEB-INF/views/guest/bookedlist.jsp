@@ -162,7 +162,7 @@
 						<input type="hidden" value="${NoticeDto.r_rsvnumber}" id ="r_rsvnumber${NoticeDto.r_rsvnumber}" >
 					</td>
 					<td>${NoticeDto.r_name}</td>
-					<td>${NoticeDto.c_id}</td>
+					<td>${NoticeDto.member_id}</td>
 					<td>${NoticeDto.nickname}</td>
 					<td>${NoticeDto.c_phone}</td>
 					<td>${NoticeDto.b_party}</td>
@@ -174,13 +174,6 @@
 				</tr>
 				</tbody>
 				</c:forEach>
-<!-- 				<tr>
-					<td colspan="5">
-					<button type="button" class="btn btn-outline-primary">
-					<a class="nav-link" href="write_view.doo">글작성</a>
-					</button>
-					</td> -->
-				</tr>
 				<tr>
 			  <c:forEach var="page" items="${page }">
 			<td colspan="5">

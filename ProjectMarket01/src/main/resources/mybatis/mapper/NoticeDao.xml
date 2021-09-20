@@ -25,10 +25,7 @@
 	<select id="searchRequest" resultType="com.study.springboot.dto.NoticeDto">
 		select * from booked_list where request like #{0}
 	</select>
-	
-	<select id="noticeView" resultType="com.study.springboot.dto.NoticeDto">
-		select * from booked_list where c_id = #{item1}
-	</select>
+
 	<select id="tokenList" resultType="com.study.springboot.dto.TokenDto">
 		select token from customer_list where token is not null
 	</select>
@@ -46,10 +43,6 @@
 						  			  #{noticeboard_oriFilename, jdbcType=VARCHAR},  mvc_noticeboard_seq.currval,0,0)
 	</insert>
 	
-	<insert id="noticeModify" parameterType="java.util.HashMap">
-		update booked_list set reject=#{item1}, request=#{item2}
-			where c_id = #{item3}
-	</insert>
 	<insert id="noticeHit">
 		update noticeboard_list set noticeboard_hit=#{noticeboard_hit}
 			where noticeboard_number = #{noticeboard_number}

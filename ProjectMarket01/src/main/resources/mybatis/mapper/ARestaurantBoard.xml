@@ -11,7 +11,7 @@
 		<![CDATA[select * from (select m_number,r_name, gu_name, t_name from restaurant_list order by h_number) where rownum<=15]]>
 	</select>
 	<select id="searchSelect" resultType="com.study.springboot.dto.ARestaurantListDto">
-		<![CDATA[select * from (select * from restaurant_list where r_name like '%'||#{0}||'%' or gu_name='%'||#{0}||'%') where rownum <=20]]>
+		<![CDATA[select * from (select * from restaurant_list where r_name like '%'||#{searchword}||'%' or gu_name='%'||#{searchword}||'%') where rownum <=20]]>
 	</select>
 	<select id="getMenuListDao" resultType="String">
 		select r_menu from restaurant_list where m_number=#{param1} and r_name=#{param2}
@@ -23,16 +23,16 @@
 		update booked_list set condition_check=1 where r_rsvnumber=#{r_rsvnumber}
 	</update>
 	<select id="getrestaurantInfo" resultType="com.study.springboot.dto.ARestaurantListDto">
-		select * from restaurant_list where m_number=#{param1} and r_name=#{param2}
+		select * from restaurant_list where m_number=#{m_number} and r_name=#{r_name}
 	</select>
 	<select id="checkLikeDao" resultType="int">
-		select count(*) from goodbutton_list where m_number=#{m_number} and r_name=#{r_name} and memeber_id=#{c_id}
+		select count(*) from goodbutton_list where m_number=#{m_number} and r_name=#{r_name} and member_id=#{member_id}
 	</select>
 	<insert id="doLikeDao">
-		insert into goodbutton_list values (seq_good_button.nextval, #{m_number},#{r_name},#{memeber_id})
+		insert into goodbutton_list values (seq_good_button.nextval, #{m_number},#{r_name},#{member_id})
 	</insert>
 	<delete id="undoLikeDao">
-		delete goodbutton_list where m_number=#{m_number} and r_name=#{r_name} and memeber_id=#{memeber_id}
+		delete goodbutton_list where m_number=#{m_number} and r_name=#{r_name} and member_id=#{member_id}
 	</delete>
 	<select id="getLikeListDao" resultType="com.study.springboot.dto.AGoodButtonDto">
 		select * from goodButton_list where member_id=#{member_id}

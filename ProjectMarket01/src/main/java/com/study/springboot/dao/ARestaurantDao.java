@@ -17,11 +17,11 @@ public interface ARestaurantDao {
 	ArrayList<ARestaurantListDto> searchSelect(@Param("searchword")String searchword);
 	int noCheckReservation(@Param("r_rsvnumber")String r_rsvnumber);
 	int checkReservation(@Param("r_rsvnumber")String r_rsvnumber);
-	ArrayList<ARestaurantListDto> getrestaurantInfo(String mnumber, String storename);
+	ArrayList<ARestaurantListDto> getrestaurantInfo(@Param("m_number")String mnumber, @Param("r_name")String storename);
 	public String getMenuListDao(String mnumber, String storename);
-	public int checkLikeDao(@Param("memeber_id")String c_id, @Param("r_name")String r_name, @Param("m_number")String m_number);
-	public int doLikeDao(@Param("memeber_id")String c_id, @Param("r_name")String r_name, @Param("m_number")String m_number);
-	public int undoLikeDao(@Param("memeber_id")String c_id, @Param("r_name")String r_name, @Param("m_number")String m_number);
+	public int checkLikeDao(@Param("member_id")String c_id, @Param("r_name")String r_name, @Param("m_number")String m_number);
+	public int doLikeDao(@Param("member_id")String c_id, @Param("r_name")String r_name, @Param("m_number")String m_number);
+	public int undoLikeDao(@Param("member_id")String c_id, @Param("r_name")String r_name, @Param("m_number")String m_number);
 	ArrayList<AGoodButtonDto> getLikeListDao(@Param("member_id")String member_id);
 	ARestaurantListDto selectLikeListDao(String m_number, String r_name);
 //	===========주말지하

@@ -43,6 +43,6 @@ public interface RetrofitService {
     Call<ArrayList<ReviewListDto>> getReviewList(@Query("r_name") String r_name, @Query("m_number") String m_number);
     // frg5 데이터 가져오기
     @GET("android/myPage")
-    Call<JSONObjectResult> getMyprofile(@Query("member_id") String c_id);
+    Call<JSONObjectResult> getMyprofile(@Query("member_id") String id);
 
 }

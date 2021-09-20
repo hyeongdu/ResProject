@@ -7,15 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.study.springboot.dao.ItGoodsDao;
 import com.study.springboot.dao.ItNoticeDao;
-import com.study.springboot.dao.ItReplyDao;
 import com.study.springboot.dao.ItUserDao;
-import com.study.springboot.dto.GoodsDto;
 import com.study.springboot.dto.NoticeDto;
 import com.study.springboot.dto.NoticeListDto;
 import com.study.springboot.dto.PageInfoDto;
-import com.study.springboot.dto.ReplyDto;
 import com.study.springboot.dto.UserDto;
 
 @Service
@@ -26,12 +22,6 @@ public class ProjectService implements IProjectService {
 	
 	@Autowired
 	ItNoticeDao notice_dao;
-	
-	@Autowired
-	ItGoodsDao good_dao;
-	
-	@Autowired
-	ItReplyDao reply_dao;
 
 	@Override
 	public UserDto userSelect(String c_id) {
@@ -197,56 +187,7 @@ public class ProjectService implements IProjectService {
 		return nTotalCount;
 	}
 	
-	@Override
-	public NoticeDto noticeView(String c_id) {
-		return notice_dao.noticeView(c_id);
-	}
 	
-	@Override
-	public int goodsArticleCount() {
-		return good_dao.goodsArticleCount();
-	}
-	
-	@Override
-	public List<GoodsDto> goodsList(Map<String, Integer> map) {
-		return good_dao.goodsList(map);
-	}
-	
-	@Override
-	public int articleCount() {
-		return good_dao.articleCount();
-	}
-	
-	@Override
-	public GoodsDto goodsView(String id) {
-		return good_dao.goodsView(id);
-	}
-	
-	@Override
-	public int writeGoods(Map<String, String> map) {
-		
-		int nResult = good_dao.writeGoods(map);
-		return nResult;
-	}
-	
-	@Override
-	public List<ReplyDto> replyView_N(String nId) {
-		System.out.println(nId);
-		return reply_dao.replyView_N(nId);
-	}
-	
-	@Override
-	public int writeReply(Map<String, String> map) {
-		
-		int nResult = reply_dao.writeReply(map);
-		return nResult;
-	}
-	
-	@Override
-	public int deleteReply(String sid) {
-		int nResult = reply_dao.deleteReply(sid);
-		return nResult;
-	}
 
 
 

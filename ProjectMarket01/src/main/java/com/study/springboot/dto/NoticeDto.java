@@ -13,16 +13,16 @@ import lombok.Data;
 @Data
 @Alias("notice")
 public class NoticeDto {
-	private int number;
+	private int r_index;
 	private String r_rsvnumber;
 	private String m_number;
 	@NotNull(message="r_name is null.")
 	@NotEmpty(message="r_name is empty.")
 	private String r_name;
-	@NotNull(message="c_id is null.")
-	@NotEmpty(message="c_id is empty.")
-	@Size(min=6, max=15, message="c_id min=6, max=15.")
-	private String c_id;
+	@NotNull(message="member_id is null.")
+	@NotEmpty(message="member_id is empty.")
+	@Size(min=6, max=15, message="member_id min=6, max=15.")
+	private String member_id;
 	@NotNull(message="nickname is null.")
 	@NotEmpty(message="nickname is empty.")
 	@Size(min=2, max=15, message="nickname min=2, max=15.")

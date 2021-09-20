@@ -11,6 +11,6 @@ import com.study.springboot.dto.AReservationDto;
 @Mapper
 public interface AReservationDao {
 	public int insertRsvDao(Map<String, Object> map);
-	ArrayList<ACustomerListDto> getRsvMemInfoDao(String c_id);
+	ArrayList<ACustomerListDto> getRsvMemInfoDao(@Param("member_id")String member_id);
 	ArrayList<AReservationDto> getRsvInfoDao(@Param("r_rsvnumber")String r_rsvnumber);
 }

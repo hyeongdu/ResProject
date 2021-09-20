@@ -372,7 +372,7 @@ public class ReservationActivity extends AppCompatActivity {
             Log.d(TAG,"set 예약번호: "+r_rsvnum);
 
             HashMap<String, Object> reserveinfo=new HashMap<String, Object>();
-            reserveinfo.put("c_id", id);
+            reserveinfo.put("member_id", id);
             reserveinfo.put("r_rsvnumber", r_rsvnum);
             reserveinfo.put("m_number", storenumber);
             reserveinfo.put("r_name",storename);

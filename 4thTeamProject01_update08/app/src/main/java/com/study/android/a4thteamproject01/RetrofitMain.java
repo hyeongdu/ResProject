@@ -8,16 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitMain {
-//    Gson gson = new GsonBuilder()
-//            .setLenient()
-//            .create();
-    //    private Context context;
-//    public RetrofitMain(Context context){
-//        this.context=context;
-//    }
 
     Retrofit retrofit=new Retrofit.Builder()
-            .baseUrl("http://192.168.35.203:8081/")
+            .baseUrl("http://192.168.0.2:8081/")
             .addConverterFactory(GsonConverterFactory.create())
             .addConverterFactory(ScalarsConverterFactory.create())
             .build();

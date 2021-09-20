@@ -17,18 +17,18 @@ public class AndroidReservationService implements IAndroidReservationService{
 	@Autowired
 	AReservationDao reservation_dao;
 	//예약 시 로그인 아이디값으로 회원정보를 가져옴.
-	public String getRsvMemInfo(String c_id) {
+	public String getRsvMemInfo(String member_id) {
 		System.out.println("Service : getRerservation Member Info");
 		ArrayList<ACustomerListDto> list=new ArrayList<>();
-		list=reservation_dao.getRsvMemInfoDao(c_id);
+		list=reservation_dao.getRsvMemInfoDao(member_id);
 		
 		JSONArray jsonArray1 = new JSONArray();
 
 		JSONObject jb = new JSONObject();
 		
-		jb.put("c_index", list.get(0).getC_index());
-		jb.put("c_name",list.get(0).getC_name());
-		jb.put("c_phone",list.get(0).getC_phone());		
+		jb.put("c_index", list.get(0).getMember_number());
+		jb.put("c_name",list.get(0).getMember_name());
+		jb.put("c_phone",list.get(0).getMember_phone());		
 		jsonArray1.add(jb);
 		System.out.println(jb.toString());
 	

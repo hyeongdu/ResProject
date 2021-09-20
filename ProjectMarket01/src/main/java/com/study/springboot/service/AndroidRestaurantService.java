@@ -17,8 +17,7 @@ import com.study.springboot.dto.AGoodButtonDto;
 import com.study.springboot.dto.AReservationDto;
 import com.study.springboot.dto.ARestaurantListDto;
 import com.study.springboot.dto.AReviewDto;
-import com.study.springboot.dto.AReviewListDto;
-import com.study.springboot.dto.ASirenDto;
+import com.study.springboot.dto.SirenListDto;
 
 @Service
 public class AndroidRestaurantService implements IAndroidRestaurantService{
@@ -317,7 +316,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 		JSONArray jsonArray1 = new JSONArray();
 		for(i=0;i<list.size();i++) {
 			JSONObject jb = new JSONObject();
-			jb.put("nickname", list.get(i).getNickname());
+			jb.put("nickname", list.get(i).getMemeber_nickname());
 			jb.put("grade", list.get(i).getGrade());
 			jb.put("contents", list.get(i).getContents());
 			jb.put("filename", list.get(i).getFilename());
@@ -341,12 +340,12 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 		}
 
 		// 회원 아이디를 통해 내 예약내역 출력
-		public String getCustomerResList(String memeber_id) {
+		public String getCustomerResList(String member_id) {
 			System.out.println("Service:getCustomerResList");
 
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<AReservationDto> list = member_dao.getCustomerResList(memeber_id);
+			ArrayList<AReservationDto> list = member_dao.getCustomerResList(member_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
@@ -419,12 +418,12 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
 				JSONObject jb = new JSONObject();
-				jb.put("c_name", list.get(i).getC_name());
-				jb.put("c_id", list.get(i).getC_id());
-				jb.put("c_phone", list.get(i).getC_phone());
-				jb.put("c_email", list.get(i).getC_eMail());
-				jb.put("nickname", list.get(i).getNickname());
-				jb.put("tdate", list.get(i).getTdata());
+				jb.put("c_name", list.get(i).getMember_name());
+				jb.put("c_id", list.get(i).getMember_id());
+				jb.put("c_phone", list.get(i).getMember_phone());
+				jb.put("c_email", list.get(i).getMember_eMail());
+				jb.put("nickname", list.get(i).getMember_nickname());
+				jb.put("tdate", list.get(i).getMember_data());
 				jsonArray1.add(jb);
 //								System.out.println(jsonArray1);
 				fjb.put("myinfo", jsonArray1);
@@ -444,7 +443,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
 				JSONObject jb = new JSONObject();
-				jb.put("nickname", list.get(i).getNickname());
+				jb.put("nickname", list.get(i).getMember_nickname());
 				jb.put("userprofile", list.get(i).getUserprofile());
 				jsonArray1.add(jb);
 //								System.out.println(jsonArray1);
@@ -455,20 +454,20 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 		}
 
 		// 내 정보수정 DATA 불러오기
-		public String getModifyData(String memeber_id) {
+		public String getModifyData(String member_id) {
 			System.out.println("Service:Customer modify Data: " );
 
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<ACustomerListDto> list = member_dao.getMyProfile(memeber_id);
+			ArrayList<ACustomerListDto> list = member_dao.getMyProfile(member_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
 				JSONObject jb = new JSONObject();
-				jb.put("c_name", list.get(i).getC_name());
-				jb.put("c_id", list.get(i).getC_id());
-				jb.put("c_phone", list.get(i).getC_phone());
-				jb.put("c_email", list.get(i).getC_eMail());
+				jb.put("c_name", list.get(i).getMember_name());
+				jb.put("c_id", list.get(i).getMember_id());
+				jb.put("c_phone", list.get(i).getMember_phone());
+				jb.put("c_email", list.get(i).getMember_eMail());
 				jsonArray1.add(jb);
 //								System.out.println(jsonArray1);
 				fjb.put("mod_data", jsonArray1);
@@ -489,7 +488,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 			
 			JSONObject fjb = new JSONObject();
 			int i = 0;
-			ArrayList<AReviewListDto> list = member_dao.getMyReview(memeber_id);
+			ArrayList<AReviewDto> list = member_dao.getMyReview(memeber_id);
 
 			JSONArray jsonArray1 = new JSONArray();
 			for (i = 0; i < list.size(); i++) {
@@ -564,7 +563,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 
 							JSONObject fjb = new JSONObject();
 							int i = 0;
-							ArrayList<ASirenDto> list = member_dao.getCustomersirenList(c_id);
+							ArrayList<SirenListDto> list = member_dao.getCustomersirenList(c_id);
 
 							JSONArray jsonArray1 = new JSONArray();
 							for (i = 0; i < list.size(); i++) {
@@ -582,7 +581,7 @@ public class AndroidRestaurantService implements IAndroidRestaurantService{
 								jb.put("reject", list.get(i).getReject());
 								jb.put("res_payment", list.get(i).getRes_payment());
 								jb.put("request", list.get(i).getRequest());
-								jb.put("tdate", list.get(i).getTdate());
+								jb.put("tdate", list.get(i).getT_date());
 							
 								jsonArray1.add(jb);
 //										System.out.println(jsonArray1);

@@ -75,7 +75,7 @@ public class Fragment5 extends Fragment {
                         JSONObjectResult profile = response.body();
 
                         for(UserDto data:profile.myprofile){
-                            forNickname.setText(data.getNickname());
+                            forNickname.setText(data.getNickname() + "님 환영합니다.");
 
                         }
 

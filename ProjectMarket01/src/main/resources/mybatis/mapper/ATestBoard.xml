@@ -4,7 +4,7 @@
 
 <mapper namespace="com.study.springboot.dao.ITestBoardDao">
 
-	<select id="testSelect" resultType="com.study.springboot.dto.TestBoardDto">
+	<select id="testSelect" resultType="com.study.springboot.dto.ARestaurantListDto">
 	select *
   			from  (select m_number,r_number,r_menu,r_name,r_adress1,r_adress2,
         	round(( 6371 * acos( cos( #{param1}*acos(-1)/180 ) * cos( coordinates_y*acos(-1)/180 ) * cos( coordinates_x*acos(-1)/180 - #{param2}*acos(-1)/180 ) + sin( #{param1}*acos(-1)/180 ) * sin( coordinates_y*acos(-1)/180 ) ) ),2) AS distance
